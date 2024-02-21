@@ -20,3 +20,7 @@ export type StudySetForm = {
     term: string;
     definition: string;
 };
+
+export type StudySetField = {
+    title: string;
+}
