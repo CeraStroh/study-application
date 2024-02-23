@@ -1,40 +1,49 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Button } from '@/app/ui/button';
 
-const FormComponent: React.FC = () => {
-  const [numberOfComponents, setNumberOfComponents] = useState<number>(1);
-  const [inputs, setInputs] = useState<string[]>(['']);
+const MyComponent: React.FC = () => {
+  const [components, setComponents] = useState<JSX.Element[]>([]);
 
-  const handleInputChange = (index: number, value: string) => {
-    const newInputs = [...inputs];
-    newInputs[index] = value;
-    setInputs(newInputs);
+  const handleAddComponent = () => {
+    // Add a new component to the existing list of components
+    setComponents(prevComponents => [...prevComponents, <NewComponent key={prevComponents.length} onDelete={() => handleDeleteComponent(prevComponents.length)} />]);
   };
 
-  const handleNumberInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value);
-    setNumberOfComponents(value);
-    setInputs(new Array(value).fill(''));
+  const handleDeleteComponent = (index: number) => {
+    // Filter out the component at the specified index
+    setComponents(prevComponents => prevComponents.filter((_, i) => i !== index));
   };
 
   return (
     <div>
-      <label>Number of Components: 
-        <input type="number" value={numberOfComponents} onChange={handleNumberInputChange} />
-      </label>
-      <form>
-        {Array.from({ length: numberOfComponents }).map((_, index) => (
-          <input
-            key={index}
-            type="text"
-            value={inputs[index]}
-            onChange={(event) => handleInputChange(index, event.target.value)}
-          />
-        ))}
-      </form>
+      {/* Render existing components */}
+      {components.map((component, index) => (
+        <div key={index}>
+          {component}
+        </div>
+      ))}
+
+      {/* Button to add a new component */}
+      <Button onClick={handleAddComponent}>Add Component</Button>
     </div>
   );
 };
 
-export default FormComponent;
+interface NewComponentProps {
+  onDelete: () => void;
+}
+
+const NewComponent: React.FC<NewComponentProps> = ({ onDelete }) => {
+  return (
+    <div>
+      {/* Content of the new component */}
+      <p>New Component</p>
+      {/* Button to delete the component */}
+      <Button onClick={onDelete}>Delete Component</Button>
+    </div>
+  );
+};
+
+export default MyComponent;
