@@ -54,9 +54,11 @@ export async function createStudySet(prevState: State, formData: FormData) {
       message: 'Missing Fields. Failed to Create Study Set.',
     };
   }
+
+  console.log(`Running createStudySet()`);
  
   // Prepare data for insertion into the database
-  const { user_id, set_id, title, pairs } = validatedFields.data;
+  const { title, pairs } = validatedFields.data;
   const date = new Date().toISOString().split('T')[0];
  
   // Insert data into the database
