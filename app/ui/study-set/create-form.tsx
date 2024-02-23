@@ -12,11 +12,20 @@ import {
 import { Button } from '@/app/ui/button';
 import { createStudySet, createStudySetContent } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
+import { useState } from 'react';
 
 export default function Form() {
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createStudySet, initialState);
-  const pairs = 1;
+  const [pairs, setPairs] = useState<JSX.Element[]>([]);
+  
+  const handleAddPair = () => {
+    setPairs(prevPairs => [...prevPairs, <NewPair key={pairs.length} onDelete={() => handleDeletePair(prevPairs.length)} />]);
+  };
+
+  const handleDeletePair = (index: number) => {
+    setPairs(prevPairs => prevPairs.filter((_, i) => i !== index));
+  }
 
   return (
     <form action={dispatch}>
@@ -48,40 +57,13 @@ export default function Form() {
           </div>
         </div>
 
-        {/* Number of Term-Definition pairs */}
-        <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium text-black">
-            Choose a number of Term-Definition pairs
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="pairs"
-                name="pairs"
-                type="number"
-                step="1"
-                min="1"
-                max="50"
-                placeholder="1"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                aria-describedby="pairs-error"
-              />
-              {/* <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" /> */}
-            </div>
-            <div id="pairs-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.pairs &&
-                state.errors.pairs.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-                </div>
-          </div>
-        </div>
+        {/* Term-Definition pairs */}
+        <div>
+          {/* Render existing pairs */}
+          {pairs.map(pair => pair)}
 
-        {/* Term Definition pair */}
-        <div className="mb-4 columns-2">
-          displayPairs(pairs);
+          {/* Button to add a new component */}
+          <Button onClick={handleAddPair}>Add pair</Button>
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
@@ -97,11 +79,14 @@ export default function Form() {
   );
 }
 
-export function displayPairs(pairs: number) {
-  const studyPairs = [];
+interface NewComponentProps {
+  onDelete: () => void;
+}
 
-  for (let i = 0; i < pairs; i++) {
-    studyPairs.push(<>
+const NewPair: React.FC<NewComponentProps> = ({ onDelete }) => {
+
+  return (
+    <div className="mb-1 columns-2">
       <div className="w-full">
         <label htmlFor="term" className="mb-2 block text-sm font-medium text-black">
           Term
@@ -152,12 +137,9 @@ export function displayPairs(pairs: number) {
             ))}
         </div> */}
       </div>
-    </>)
-  }
-
-  return (
-    <>
-      {studyPairs}
-    </>
+      <div className="w-full">
+        <Button onClick={onDelete}>Delete</Button>
+      </div>
+    </div>
   );
-}
+};
