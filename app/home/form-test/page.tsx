@@ -1,49 +1,62 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from "react";
 import { Button } from '@/app/ui/button';
 
-const MyComponent: React.FC = () => {
-  const [components, setComponents] = useState<JSX.Element[]>([]);
+export default function AddDynamicInputFields() {
+  const [pairs, setPairs] = useState([{ term: "", definition: "" }]);
 
-  const handleAddComponent = () => {
-    // Add a new component to the existing list of components
-    setComponents(prevComponents => [...prevComponents, <NewComponent key={prevComponents.length} onDelete={() => handleDeleteComponent(prevComponents.length)} />]);
+  const handleAddPair = () => {
+    setPairs([...pairs, { term: "", definition: "" }]);
   };
 
-  const handleDeleteComponent = (index: number) => {
-    // Filter out the component at the specified index
-    setComponents(prevComponents => prevComponents.filter((_, i) => i !== index));
+  const handleChange = (event: any, index: number) => {
+    let { name, value } = event.target;
+    console.log(event.target)
+    let onChangeValue = [...pairs];
+    onChangeValue[index][name] = value;
+    console.log(name);
+    setPairs(onChangeValue);
   };
+
+  const handleDeletePair = (index: number) => {
+    const newArray = [...pairs];
+    newArray.splice(index, 1);
+    setPairs(newArray);
+  };
+
 
   return (
-    <div>
-      {/* Render existing components */}
-      {components.map((component, index) => (
-        <div key={index}>
-          {component}
+    <div className="container">
+      {pairs.map((item, index) => (
+        <div className="input_container" key={index}>
+          <input
+            name="term"
+            type="string"
+            value={item.term}
+            onChange={(event) => handleChange(event, index)}
+            placeholder="Enter term"
+            className="placeholder:text-black text-black"
+          />
+          <input
+            name="definition"
+            type="string"
+            value={item.definition}
+            onChange={(event) => handleChange(event, index)}
+            placeholder="Enter definition"
+            className="placeholder:text-black text-black"
+          />
+          {pairs.length > 1 && (
+            <Button onClick={() => handleDeletePair(index)}>Delete</Button>
+          )}
+          {index === pairs.length - 1 && (
+            <Button onClick={() => handleAddPair()}>Add</Button>
+          )}
         </div>
       ))}
 
-      {/* Button to add a new component */}
-      <Button onClick={handleAddComponent}>Add Component</Button>
+      <p>This is what the data looks like</p>
+      <div className="body"> {JSON.stringify(pairs)} </div>
     </div>
   );
-};
-
-interface NewComponentProps {
-  onDelete: () => void;
 }
-
-const NewComponent: React.FC<NewComponentProps> = ({ onDelete }) => {
-  return (
-    <div>
-      {/* Content of the new component */}
-      <p>New Component</p>
-      {/* Button to delete the component */}
-      <Button onClick={onDelete}>Delete Component</Button>
-    </div>
-  );
-};
-
-export default MyComponent;
