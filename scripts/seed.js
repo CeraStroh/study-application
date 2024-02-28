@@ -94,7 +94,7 @@ async function seedMidwestUSCapitals(client) {
 
     // Create the first set table if it doesn't exist
     const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS midwestuscapitals (
+    CREATE TABLE IF NOT EXISTS MidwestUSCapitals (
     term VARCHAR(255) NOT NULL,
     definition VARCHAR(255) NOT NULL,
   );
@@ -102,12 +102,12 @@ async function seedMidwestUSCapitals(client) {
 
     console.log(`Created "midwestuscapitals" table`);
 
-    // Insert data into the "midwestuscapitals" table
+    // Insert data into the "MidwestUSCapitals" table
     const insertedMidwestUSCapitals = await Promise.all(
-      midwestuscapitals.map(
-        (midwestuscapitals) => client.sql`
-        INSERT INTO midwestuscapitals (term, definition)
-        VALUES (${midwestuscapitals.term}, ${midwestuscapitals.definition})
+      MidwestUSCapitals.map(
+        (MidwestUSCapitals) => client.sql`
+        INSERT INTO MidwestUSCapitals (term, definition)
+        VALUES (${MidwestUSCapitals.term}, ${MidwestUSCapitals.definition})
         ON CONFLICT (id) DO NOTHING;
       `,
       ),
@@ -117,7 +117,7 @@ async function seedMidwestUSCapitals(client) {
 
     return {
       createTable,
-      midwestuscapitals: insertedMidwestUSCapitals,
+      MidwestUSCapitals: insertedMidwestUSCapitals,
     };
   } catch (error) {
     console.error('Error seeding MidwestUSCapitals:', error);
@@ -131,20 +131,20 @@ async function seedCOSCClasses(client) {
 
     // Create the second set table if it doesn't exist
     const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS coscclasses (
+    CREATE TABLE IF NOT EXISTS COSCClasses (
     term VARCHAR(255) NOT NULL,
     definition VARCHAR(255) NOT NULL,
   );
 `;
 
-    console.log(`Created "coscclasses" table`);
+    console.log(`Created "COSCClasses" table`);
 
-    // Insert data into the "coscclasses" table
+    // Insert data into the "COSCClasses" table
     const insertedCOSCClasses = await Promise.all(
-      coscclasses.map(
-        (coscclasses) => client.sql`
-        INSERT INTO coscclasses (term, definition)
-        VALUES (${coscclasses.term}, ${coscclasses.definition})
+      COSCClasses.map(
+        (COSCClasses) => client.sql`
+        INSERT INTO COSCClasses (term, definition)
+        VALUES (${COSCClasses.term}, ${COSCClasses.definition})
         ON CONFLICT (id) DO NOTHING;
       `,
       ),
@@ -154,7 +154,7 @@ async function seedCOSCClasses(client) {
 
     return {
       createTable,
-      coscclasses: insertedCOSCClasses,
+      COSCClasses: insertedCOSCClasses,
     };
   } catch (error) {
     console.error('Error seeding COSCClasses:', error);
@@ -168,20 +168,20 @@ async function seedFinancialAccountingExam1(client) {
 
     // Create the third set table if it doesn't exist
     const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS financialaccountingexam1 (
+    CREATE TABLE IF NOT EXISTS FinancialAccountingExam1 (
     term VARCHAR(255) NOT NULL,
     definition VARCHAR(255) NOT NULL,
   );
 `;
 
-    console.log(`Created "financialaccountingexam1" table`);
+    console.log(`Created "FinancialAccountingExam1" table`);
 
-    // Insert data into the "financialaccountingexam1" table
+    // Insert data into the "FinancialAccountingExam1" table
     const insertedFinancialAccountingExam1 = await Promise.all(
-      financialaccountingexam1.map(
-        (financialaccountingexam1) => client.sql`
-        INSERT INTO financialaccountingexam1 (term, definition)
-        VALUES (${financialaccountingexam1.term}, ${financialaccountingexam1.definition})
+      FinancialAccountingExam1.map(
+        (FinancialAccountingExam1) => client.sql`
+        INSERT INTO FinancialAccountingExam1 (term, definition)
+        VALUES (${FinancialAccountingExam1.term}, ${FinancialAccountingExam1.definition})
         ON CONFLICT (id) DO NOTHING;
       `,
       ),
@@ -191,7 +191,7 @@ async function seedFinancialAccountingExam1(client) {
 
     return {
       createTable,
-      financialaccountingexam1: insertedFinancialAccountingExam1,
+      FinancialAccountingExam1: insertedFinancialAccountingExam1,
     };
   } catch (error) {
     console.error('Error seeding FinancialAccountingExam1:', error);
