@@ -121,8 +121,8 @@ export default function Form() {
                 </p>
               ))}
           </div> */}
-          <p>This is what the data looks like</p>
-          <div className="body"> {jsonPairs} </div>
+          {/* <p>This is what the data looks like</p>
+          <div className="body"> {jsonPairs} </div> */}
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
