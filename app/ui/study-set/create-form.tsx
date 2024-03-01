@@ -17,23 +17,23 @@ import { useState } from 'react';
 export default function Form() {
   const initialState = { message: null, errors: {} };
   // const [state, dispatch] = useFormState(createStudySet, initialState);
-  const [pairs, setPairs] = useState([{ term: "", definition: "" }]);
+  const [pairs, setPairs] = useState<{ term: string; definition: string; }[]>([{ term: "", definition: "" }]);
   const jsonPairs = JSON.stringify(pairs);
 
   const handleAddPair = () => {
     setPairs([...pairs, { term: "", definition: "" }]);
   };
 
-  const handleChange = (event: any, index: number) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     let { name, value } = event.target;
-    console.log(event.target)
+    console.log(event.target);
     let onChangeValue = [...pairs];
-    onChangeValue[index][name] = value;
+    (onChangeValue[index] as any)[name] = value;
     console.log(name);
     setPairs(onChangeValue);
   };
 
-  const handleDeletePair = (index: number) => {
+  const handleDeletePair = (index: number): void => {
     const newArray = [...pairs];
     newArray.splice(index, 1);
     setPairs(newArray);
