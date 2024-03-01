@@ -10,14 +10,15 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createStudySet, createStudySetContent } from '@/app/lib/actions';
+import { createStudySet } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 import { useState } from 'react';
 
 export default function Form() {
   const initialState = { message: null, errors: {} };
-  const [state, dispatch] = useFormState(createStudySet, initialState);
+  // const [state, dispatch] = useFormState(createStudySet, initialState);
   const [pairs, setPairs] = useState([{ term: "", definition: "" }]);
+  const jsonPairs = JSON.stringify(pairs);
 
   const handleAddPair = () => {
     setPairs([...pairs, { term: "", definition: "" }]);
@@ -39,7 +40,7 @@ export default function Form() {
   };
 
   return (
-    <form action={dispatch}>
+    <form action={createStudySet}>
       <div className="rounded-md bg-gray-400 p-4 md:p-6">
         {/* Title Name */}
         <div className="mb-4">
@@ -56,14 +57,14 @@ export default function Form() {
                 aria-describedby="title-error"
             />
           </div>
-          <div id="title-error" aria-live="polite" aria-atomic="true">
+          {/* <div id="title-error" aria-live="polite" aria-atomic="true">
             {state.errors?.title &&
               state.errors.title.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
               ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Term-Definition pairs */}
@@ -82,7 +83,7 @@ export default function Form() {
                   onChange={(event) => handleChange(event, index)}
                   placeholder="Enter term"
                   className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                  aria-describedby="term-error"
+                  // aria-describedby="pairs-error"
                 />
               </div>
               <div className="w-full">
@@ -97,7 +98,7 @@ export default function Form() {
                   onChange={(event) => handleChange(event, index)}
                   placeholder="Enter definition"
                   className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                  aria-describedby="definition-error"
+                  // aria-describedby="pairs-error"
                 />
               </div>
               <div className="mb-5">
@@ -112,8 +113,16 @@ export default function Form() {
               </div>
             </div>
           ))}
-          {/* <p>This is what the data looks like</p>
-          <div className="body"> {JSON.stringify(pairs)} </div> */}
+          {/* <div id="pairs-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.jsonPairs &&
+              state.errors.jsonPairs.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div> */}
+          <p>This is what the data looks like</p>
+          <div className="body"> {jsonPairs} </div>
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
