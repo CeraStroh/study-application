@@ -5,18 +5,20 @@ export type User = {
     name: string;
     email: string;
     password: string;
-  };
-  
-export type StudySets = {
+};
+
+export type StudySet = {
     user_id: string;
     set_id: string;
     title: string;
-    pairs: number;
+    terms: object;
+    definitions: object;
     date: string;
 };
   
 export type StudySetForm = {
     set_id: string;
+    title: string;
     term: string;
     definition: string;
 };
