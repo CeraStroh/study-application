@@ -5,11 +5,11 @@ import { Button } from '@/app/ui/button';
 import { createTest } from "@/app/lib/actions";
 
 export default function Form() {
-  const [pairs, setPairs] = useState([{ term: "", definition: "" }]);
+  const [pairs, setPairs] = useState<{ term: string; definition: string; }[]>([{ term: "", definition: "" }]);
 
-  const handleChange = (index: number, event: any) => {
+  const handleChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
     let data = [...pairs];
-    data[index][event.target.name] = event.target.value;
+    (data[index] as any)[event.target.name] = event.target.value;
     setPairs(data);
   };
 
