@@ -36,6 +36,7 @@ export async function createStudySet(formData: FormData) {
     terms: formData.getAll('term'),
     definitions: formData.getAll('definition'),
   });
+  const compactTitle = `${title}`.replace(/\s/g, "");
   const date = new Date().toISOString().split('T')[0];
   // console.log(`after validatedFields`);
   // // If form validation fails, return errors early. Otherwise, continue.
@@ -49,8 +50,8 @@ export async function createStudySet(formData: FormData) {
   // console.log(`before preparing data`);
   // // Prepare data for insertion into the database
   // const { title, terms, definitions } = validatedFields.data;
-
   console.log(`title: ${title}`);
+  console.log(`compactTitle: ${compactTitle}`);
   console.log(`terms: ${terms}`);
   console.log(`definitions: ${definitions}`);
 
@@ -58,7 +59,7 @@ export async function createStudySet(formData: FormData) {
   try {
     await sql`
       INSERT INTO studysets (user_id, title, date)
-      VALUES ("410544b2-4001-4271-9855-fec4b6a6442a", ${title}, ${date})
+      VALUES ("410544b2-4001-4271-9855-fec4b6a6442a", ${compactTitle}, ${date})
     `;
   } catch (error) {
     // If a database error occurs, return a more specific error.
@@ -70,25 +71,25 @@ export async function createStudySet(formData: FormData) {
   // Create Study Set table
   try {
     await sql`
-    CREATE TABLE IF NOT EXISTS ${title} (
+    CREATE TABLE IF NOT EXISTS ${compactTitle} (
       term VARCHAR(255) NOT NULL,
       definition VARCHAR(255) NOT NULL,
     `
   } catch (error) {
     return {
-      message: 'Database Error: Failed to create ${title} table',
+      message: 'Database Error: Failed to create ${compactTitle} table',
     };
   }
 
   // Insert pairs into table
   try {
     await sql`
-    INSERT INTO ${title} (term, definition)
+    INSERT INTO ${compactTitle} (term, definition)
     VALUES (${terms}, ${definitions})
     `;
   } catch (error) {
     return {
-      message: 'Database Error: Failed to insert pairs into ${title} table',
+      message: 'Database Error: Failed to insert pairs into ${compactTitle} table',
     };
   }
  
