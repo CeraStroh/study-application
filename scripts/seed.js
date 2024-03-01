@@ -54,9 +54,8 @@ async function seedStudySets(client) {
     // Create the "studysets" table if it doesn't exist
     const createTable = await client.sql`
     CREATE TABLE IF NOT EXISTS studysets (
-    user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    set_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     user_id UUID NOT NULL,
-    set_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     pairs INT NOT NULL,
     date DATE NOT NULL
@@ -68,10 +67,10 @@ async function seedStudySets(client) {
     // Insert data into the "studysets" table
     const insertedStudysets = await Promise.all(
       studysets.map(
-        (studysets) => client.sql`
-        INSERT INTO studysets (user_id, set_id, title, pairs, date)
-        VALUES (${studysets.user_id}, ${studysets.set_id}, ${studysets.title}, ${studysets.pairs} ${studysets.date})
-        ON CONFLICT (id) DO NOTHING;
+        (studyset) => client.sql`
+        INSERT INTO studysets (user_id, title, pairs, date)
+        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.pairs} ${studyset.date})
+        ON CONFLICT (set_id) DO NOTHING;
       `,
       ),
     );
@@ -105,10 +104,9 @@ async function seedMidwestUSCapitals(client) {
     // Insert data into the "MidwestUSCapitals" table
     const insertedMidwestUSCapitals = await Promise.all(
       MidwestUSCapitals.map(
-        (MidwestUSCapitals) => client.sql`
+        (MidwestUSCapital) => client.sql`
         INSERT INTO MidwestUSCapitals (term, definition)
-        VALUES (${MidwestUSCapitals.term}, ${MidwestUSCapitals.definition})
-        ON CONFLICT (id) DO NOTHING;
+        VALUES (${MidwestUSCapital.term}, ${MidwestUSCapital.definition});
       `,
       ),
     );
@@ -142,10 +140,9 @@ async function seedCOSCClasses(client) {
     // Insert data into the "COSCClasses" table
     const insertedCOSCClasses = await Promise.all(
       COSCClasses.map(
-        (COSCClasses) => client.sql`
+        (COSCClass) => client.sql`
         INSERT INTO COSCClasses (term, definition)
-        VALUES (${COSCClasses.term}, ${COSCClasses.definition})
-        ON CONFLICT (id) DO NOTHING;
+        VALUES (${COSCClass.term}, ${COSCClass.definition});
       `,
       ),
     );
@@ -179,10 +176,9 @@ async function seedFinancialAccountingExam1(client) {
     // Insert data into the "FinancialAccountingExam1" table
     const insertedFinancialAccountingExam1 = await Promise.all(
       FinancialAccountingExam1.map(
-        (FinancialAccountingExam1) => client.sql`
+        (FinancialAccountingExam) => client.sql`
         INSERT INTO FinancialAccountingExam1 (term, definition)
-        VALUES (${FinancialAccountingExam1.term}, ${FinancialAccountingExam1.definition})
-        ON CONFLICT (id) DO NOTHING;
+        VALUES (${FinancialAccountingExam.term}, ${FinancialAccountingExam.definition});
       `,
       ),
     );
