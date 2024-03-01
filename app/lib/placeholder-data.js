@@ -12,23 +12,17 @@ const users = [
 const studysets = [
 	{
 		user_id: users[0].user_id,
-		set_id: '65473',
 		title: 'Midwest US Capitals',
-		pairs: 12,
 		date: '2024-2-18',
 	},
 	{
 		user_id: users[0].user_id,
-		set_id: '53476',
 		title: 'COSC Classes',
-		pairs: 5,
 		date: '2024-2-17',
 	},
 	{
 		user_id: users[0].user_id,
-		set_id: '45364',
 		title: 'Financial Accounting Exam 1',
-		pairs: 4,
 		date: '2024-2-16',
 	},
 ];
