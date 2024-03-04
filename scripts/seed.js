@@ -197,8 +197,8 @@ async function seedFinancialAccountingExam1(client) {
 async function main() {
   const client = await db.connect();
 
-  // await seedUsers(client);
-  //await seedStudySets(client);
+  await seedUsers(client);
+  await seedStudySets(client);
   await seedMidwestUSCapitals(client);
   await seedCOSCClasses(client);
   await seedFinancialAccountingExam1(client);
