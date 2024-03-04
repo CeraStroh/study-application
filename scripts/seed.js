@@ -30,7 +30,7 @@ async function seedUsers(client) {
         return client.sql`
         INSERT INTO users (user_id, name, email, password)
         VALUES (${user.user_id}, ${user.name}, ${user.email}, ${hashedPassword})
-        ON CONFLICT (id) DO NOTHING;
+        ON CONFLICT (user_id) DO NOTHING;
       `;
       }),
     );
@@ -57,7 +57,6 @@ async function seedStudySets(client) {
     set_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     user_id UUID NOT NULL,
     title VARCHAR(255) NOT NULL,
-    pairs INT NOT NULL,
     date DATE NOT NULL
   );
 `;
@@ -68,8 +67,8 @@ async function seedStudySets(client) {
     const insertedStudysets = await Promise.all(
       studysets.map(
         (studyset) => client.sql`
-        INSERT INTO studysets (user_id, title, pairs, date)
-        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.pairs} ${studyset.date})
+        INSERT INTO studysets (user_id, title, date)
+        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.date})
         ON CONFLICT (set_id) DO NOTHING;
       `,
       ),
@@ -95,11 +94,11 @@ async function seedMidwestUSCapitals(client) {
     const createTable = await client.sql`
     CREATE TABLE IF NOT EXISTS MidwestUSCapitals (
     term VARCHAR(255) NOT NULL,
-    definition VARCHAR(255) NOT NULL,
+    definition VARCHAR(255) NOT NULL
   );
 `;
 
-    console.log(`Created "midwestuscapitals" table`);
+    console.log(`Created "MidwestUSCapitals" table`);
 
     // Insert data into the "MidwestUSCapitals" table
     const insertedMidwestUSCapitals = await Promise.all(
@@ -131,7 +130,7 @@ async function seedCOSCClasses(client) {
     const createTable = await client.sql`
     CREATE TABLE IF NOT EXISTS COSCClasses (
     term VARCHAR(255) NOT NULL,
-    definition VARCHAR(255) NOT NULL,
+    definition VARCHAR(255) NOT NULL
   );
 `;
 
@@ -167,7 +166,7 @@ async function seedFinancialAccountingExam1(client) {
     const createTable = await client.sql`
     CREATE TABLE IF NOT EXISTS FinancialAccountingExam1 (
     term VARCHAR(255) NOT NULL,
-    definition VARCHAR(255) NOT NULL,
+    definition VARCHAR(255) NOT NULL
   );
 `;
 
@@ -198,8 +197,8 @@ async function seedFinancialAccountingExam1(client) {
 async function main() {
   const client = await db.connect();
 
-  await seedUsers(client);
-  await seedStudySets(client);
+  // await seedUsers(client);
+  //await seedStudySets(client);
   await seedMidwestUSCapitals(client);
   await seedCOSCClasses(client);
   await seedFinancialAccountingExam1(client);
