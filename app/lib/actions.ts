@@ -36,7 +36,7 @@ export async function createStudySet(formData: FormData) {
     terms: formData.getAll('term'),
     definitions: formData.getAll('definition'),
   });
-  const compactTitle = `${title}`.replace(/\s/g, "");
+  const compactTitle = `${title}`.toLowerCase().replace(/\s/g, "");
   const date = new Date().toISOString().split('T')[0];
   // console.log(`after validatedFields`);
   // // If form validation fails, return errors early. Otherwise, continue.
@@ -59,12 +59,13 @@ export async function createStudySet(formData: FormData) {
   try {
     await sql`
       INSERT INTO studysets (user_id, title, date)
-      VALUES ("410544b2-4001-4271-9855-fec4b6a6442a", ${compactTitle}, ${date})
+      VALUES ("410544b2-4001-4271-9855-fec4b6a6442a", ${title}, ${date})
+      ON CONFLICT (set_id) DO NOTHING;
     `;
   } catch (error) {
     // If a database error occurs, return a more specific error.
     return {
-      message: 'Database Error: Failed to Create Study Set.',
+      message: 'Database Error: Failed to add Study Set to table.',
     };
   }
 
@@ -73,7 +74,8 @@ export async function createStudySet(formData: FormData) {
     await sql`
     CREATE TABLE IF NOT EXISTS ${compactTitle} (
       term VARCHAR(255) NOT NULL,
-      definition VARCHAR(255) NOT NULL,
+      definition VARCHAR(255) NOT NULL
+    );
     `
   } catch (error) {
     return {
