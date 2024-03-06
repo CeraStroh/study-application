@@ -10,7 +10,7 @@ export default async function StudySetsTable() {
           <div className="md:hidden">
             {studysets?.map((studyset) => (
               <div
-                key={studyset.id}
+                key={studyset.set_id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
@@ -35,7 +35,7 @@ export default async function StudySetsTable() {
                   Title
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Date
+                  Date Created
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -45,7 +45,7 @@ export default async function StudySetsTable() {
             <tbody className="bg-white">
               {studysets?.map((studyset) => (
                 <tr
-                  key={studyset.id}
+                  key={studyset.set_id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
