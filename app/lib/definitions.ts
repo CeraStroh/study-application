@@ -28,7 +28,7 @@ export type StudySetField = {
 }
 
 export type StudySetsTable = {
-	id: string;
+	set_id: string;
 	title: string;
 	date: string;
 }
