@@ -95,13 +95,13 @@ export async function createStudySet(formData: FormData) {
   // Insert pairs into table
   try {
     await sql<StudySet>`
-      INSERT INTO test (term, definition)
+      INSERT INTO ${compact_title} (term, definition)
       VALUES (${terms}, ${definitions});
     `;
     console.log(`Inserted pairs into ${compact_title} table`);
   } catch (error) {
     return {
-      message: 'Database Error: Failed to insert pairs into ${compactTitle} table',
+      message: 'Database Error: Failed to insert pairs into ${compact_title} table',
     };
   }
   console.log(`in between adding pairs and revalidating/redirecting`);
