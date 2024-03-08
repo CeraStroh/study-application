@@ -13,16 +13,19 @@ const studysets = [
 	{
 		user_id: users[0].user_id,
 		title: 'Midwest US Capitals',
+		compact_title: 'midwestuscapitals',
 		date: '2024-2-18',
 	},
 	{
 		user_id: users[0].user_id,
 		title: 'COSC Classes',
+		compact_title: 'coscclasses',
 		date: '2024-2-17',
 	},
 	{
 		user_id: users[0].user_id,
 		title: 'Financial Accounting Exam 1',
+		compact_title: 'financialaccountingexam1',
 		date: '2024-2-16',
 	},
 ];
