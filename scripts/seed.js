@@ -57,6 +57,7 @@ async function seedStudySets(client) {
     set_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     user_id UUID NOT NULL,
     title VARCHAR(255) NOT NULL,
+    compact_title VARCHAR(255) NOT NULL,
     date DATE NOT NULL
   );
 `;
@@ -67,8 +68,8 @@ async function seedStudySets(client) {
     const insertedStudysets = await Promise.all(
       studysets.map(
         (studyset) => client.sql`
-        INSERT INTO studysets (user_id, title, date)
-        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.date})
+        INSERT INTO studysets (user_id, title, compact_title, date)
+        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.compact_title}, ${studyset.date})
         ON CONFLICT (set_id) DO NOTHING;
       `,
       ),
