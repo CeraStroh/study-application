@@ -47,21 +47,60 @@ async function seedUsers(client) {
   }
 }
 
+async function seedStudySetsOriginal(client) {
+  try {
+    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+    // Create the "studysetsoriginal" table if it doesn't exist
+    const createTable = await client.sql`
+      CREATE TABLE IF NOT EXISTS studysetsoriginal (
+      set_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      user_id UUID NOT NULL,
+      title VARCHAR(255) NOT NULL,
+      date DATE NOT NULL
+    );
+  `;
+
+    console.log(`Created "studysetsoriginal" table`);
+
+    // Insert data into the "studysetsoriginal" table
+    const insertedStudysets = await Promise.all(
+      studysets.map(
+        (studyset) => client.sql`
+        INSERT INTO studysetsoriginal (user_id, title, date)
+        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.date})
+        ON CONFLICT (set_id) DO NOTHING;
+      `,
+      ),
+    );
+
+    console.log(`Seeded ${insertedStudysets.length} study sets into studysetsoriginal`);
+
+    return {
+      createTable,
+      studysets: insertedStudysets,
+    };
+  } catch (error) {
+    console.error('Error seeding study sets original:', error);
+    throw error;
+  }
+}
+
 async function seedStudySets(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
     // Create the "studysets" table if it doesn't exist
     const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS studysets (
-    set_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    user_id UUID NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    date DATE NOT NULL,
-    terms VARCHAR[] NOT NULL,
-    definitions VARCHAR[] NOT NULL
-  );
-`;
+      CREATE TABLE IF NOT EXISTS studysets (
+      set_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      user_id UUID NOT NULL,
+      title VARCHAR(255) NOT NULL,
+      date DATE NOT NULL,
+      terms VARCHAR[] NOT NULL,
+      definitions VARCHAR[] NOT NULL
+    );
+  `;
 
     console.log(`Created "studysets" table`);
 
@@ -76,7 +115,7 @@ async function seedStudySets(client) {
       ),
     );
 
-    console.log(`Seeded ${insertedStudysets.length} study sets`);
+    console.log(`Seeded ${insertedStudysets.length} study sets into studysets`);
 
     return {
       createTable,
@@ -200,6 +239,7 @@ async function main() {
   const client = await db.connect();
 
   await seedUsers(client);
+  await seedStudySetsOriginal(client);
   await seedStudySets(client);
   // await seedMidwestUSCapitals(client);
   // await seedCOSCClasses(client);
