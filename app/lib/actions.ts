@@ -63,8 +63,8 @@ export async function createStudySet(formData: FormData) {
   // Insert data into the database
   try {
     await sql`
-      INSERT INTO studysets (user_id, title, date, terms, definitions)
-      VALUES (${user_id}, ${title}, ${date}, ${terms}, ${definitions})
+      INSERT INTO studysets (user_id, title, date)
+      VALUES (${user_id}, ${title}, ${date})
       ON CONFLICT (set_id) DO NOTHING;
     `;
     console.log(`Added ${title} to studysets table`);
