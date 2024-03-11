@@ -16,13 +16,12 @@ const FormSchema = z.object({
   title: z.string({
     invalid_type_error: 'Please enter a title.',
   }),
-  compact_title: z.string(),
   terms: z.coerce.string(),
   definitions: z.coerce.string(),
   date: z.string(),
 });
 
-const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, compact_title: true, date: true });
+const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
 
 export type State = {
   errors?: {
@@ -41,7 +40,7 @@ export async function createStudySet(formData: FormData) {
     terms: formData.getAll('term'),
     definitions: formData.getAll('definition'),
   });
-  const compact_title = `${title}`.toLowerCase().replace(/\s/g, "");
+  // const compact_title = `${title}`.toLowerCase().replace(/\s/g, "");
   const user_id = '410544b2-4001-4271-9855-fec4b6a6442a';
   const date = new Date().toISOString().split('T')[0];
   // console.log(`after validatedFields`);
@@ -56,10 +55,10 @@ export async function createStudySet(formData: FormData) {
   // console.log(`before preparing data`);
   // // Prepare data for insertion into the database
   // const { title, terms, definitions } = validatedFields.data;
-  // console.log(`title: ${title}`);
+  console.log(`title: ${title}`);
   // console.log(`compact_title: ${compact_title}`);
-  // console.log(`terms: ${terms}`);
-  // console.log(`definitions: ${definitions}`);
+  console.log(`terms: ${terms}`);
+  console.log(`definitions: ${definitions}`);
 
   // Insert data into the database
   try {
