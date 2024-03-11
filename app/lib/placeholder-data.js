@@ -13,20 +13,26 @@ const studysets = [
 	{
 		user_id: users[0].user_id,
 		title: 'Midwest US Capitals',
-		compact_title: 'midwestuscapitals',
+		// compact_title: 'midwestuscapitals',
 		date: '2024-2-18',
+		terms: ['Springfield', 'Indianapolis', 'Des Moines', 'Topeka', 'Lansing', 'Saint Paul', 'Jefferson City', 'Lincoln', 'Bismarck', 'Columbus', 'Pierre', 'Madison'],
+		definitions: ['Illinois', 'Indiana', 'Iowa', 'Kansas', 'Michigan', 'Minnesota', 'Missouri', 'Nebraska', 'North Dakota', 'Ohio', 'South Dakota', 'Wisconsin'],
 	},
 	{
 		user_id: users[0].user_id,
-		title: 'COSC Classes',
-		compact_title: 'coscclasses',
+		title: 'Spanish Numbers',
+		// compact_title: 'coscclasses',
 		date: '2024-2-17',
+		terms: ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'],
+		definitions: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'],
 	},
 	{
 		user_id: users[0].user_id,
 		title: 'Financial Accounting Exam 1',
-		compact_title: 'financialaccountingexam1',
+		// compact_title: 'financialaccountingexam1',
 		date: '2024-2-16',
+		terms: ['Accounting Equation', 'Assets', 'Liabilities', 'Stockholders\' Equity'],
+		definitions: ['Assets = Liabilities + Stockholders\' Equity', 'things company owns (land, cash, equipment, buildings, inventory, supplies, computers, trucks, office furniture)', 'amount business owes/debt (Note Payable-loan, Accounts payable)', 'owners\' claim to business'],
 	},
 ];
 
@@ -126,7 +132,7 @@ const FinancialAccountingExam1 = [
 module.exports = {
 	users,
 	studysets,
-	MidwestUSCapitals,
-	COSCClasses,
-	FinancialAccountingExam1,
+	// MidwestUSCapitals,
+	// COSCClasses,
+	// FinancialAccountingExam1,
 };
