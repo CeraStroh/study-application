@@ -64,8 +64,8 @@ export async function createStudySet(formData: FormData) {
   // Insert data into the database
   try {
     await sql`
-      INSERT INTO studysets (user_id, title, compact_title, date)
-      VALUES (${user_id}, ${title}, ${compact_title}, ${date})
+      INSERT INTO studysets (user_id, title, date, terms, definitions)
+      VALUES (${user_id}, ${title}, ${date}, ${terms}, ${definitions})
       ON CONFLICT (set_id) DO NOTHING;
     `;
     console.log(`Added ${title} to studysets table`);
@@ -75,36 +75,36 @@ export async function createStudySet(formData: FormData) {
       message: 'Database Error: Failed to add Study Set to table.',
     };
   }
-  console.log(`in between studysets table and creating table`);
-  console.log(`compact_title: ${compact_title}`);
-  // Create Study Set table
-  try {
-    await sql`
-      CREATE TABLE ${compact_title} (
-        term VARCHAR(255),
-        definition VARCHAR(255)
-      );
-    `;
-    console.log(`Created ${compact_title} table`);
-  } catch (error) {
-    return {
-      message: 'Database Error: Failed to create ${compact_title} table',
-    };
-  }
-  console.log(`in between creating table and adding pairs`);
-  // Insert pairs into table
-  try {
-    await sql<StudySet>`
-      INSERT INTO ${compact_title} (term, definition)
-      VALUES (${terms}, ${definitions});
-    `;
-    console.log(`Inserted pairs into ${compact_title} table`);
-  } catch (error) {
-    return {
-      message: 'Database Error: Failed to insert pairs into ${compact_title} table',
-    };
-  }
-  console.log(`in between adding pairs and revalidating/redirecting`);
+  // console.log(`in between studysets table and creating table`);
+  // console.log(`compact_title: ${compact_title}`);
+  // // Create Study Set table
+  // try {
+  //   await sql`
+  //     CREATE TABLE ${compact_title} (
+  //       term VARCHAR(255),
+  //       definition VARCHAR(255)
+  //     );
+  //   `;
+  //   console.log(`Created ${compact_title} table`);
+  // } catch (error) {
+  //   return {
+  //     message: 'Database Error: Failed to create ${compact_title} table',
+  //   };
+  // }
+  // console.log(`in between creating table and adding pairs`);
+  // // Insert pairs into table
+  // try {
+  //   await sql<StudySet>`
+  //     INSERT INTO ${compact_title} (term, definition)
+  //     VALUES (${terms}, ${definitions});
+  //   `;
+  //   console.log(`Inserted pairs into ${compact_title} table`);
+  // } catch (error) {
+  //   return {
+  //     message: 'Database Error: Failed to insert pairs into ${compact_title} table',
+  //   };
+  // }
+  // console.log(`in between adding pairs and revalidating/redirecting`);
   // Revalidate the cache for the home page and redirect the user.
   revalidatePath('/home');
   redirect('/home');
