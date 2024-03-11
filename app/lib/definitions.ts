@@ -11,7 +11,6 @@ export type StudySet = {
 	user_id: string;
 	set_id: string;
 	title: string;
-	compact_title: string;
 	terms: object;
 	definitions: object;
 	date: string;
