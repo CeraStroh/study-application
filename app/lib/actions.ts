@@ -61,24 +61,24 @@ export async function createStudySet(formData: FormData) {
   console.log(`definitions: ${definitions}`);
 
   // Insert data into the database
+  // try {
+  //   await sql`
+  //     INSERT INTO studysetsoriginal (user_id, title, date)
+  //     VALUES (${user_id}, ${title}, ${date})
+  //     ON CONFLICT (set_id) DO NOTHING;
+  //   `;
+  //   console.log(`Added ${title} to studysetsoriginal table`);
+  // } catch (error) {
+  //   // If a database error occurs, return a more specific error.
+  //   return {
+  //     message: 'Database Error: Failed to add Study Set to table.',
+  //   };
+  // }
+  // console.log(`in between studysetsoriginal and studysets`);
   try {
     await sql`
-      INSERT INTO studysetsoriginal (user_id, title, date)
-      VALUES (${user_id}, ${title}, ${date})
-      ON CONFLICT (set_id) DO NOTHING;
-    `;
-    console.log(`Added ${title} to studysetsoriginal table`);
-  } catch (error) {
-    // If a database error occurs, return a more specific error.
-    return {
-      message: 'Database Error: Failed to add Study Set to table.',
-    };
-  }
-  console.log(`in between studysetsoriginal and studysets`);
-  try {
-    await sql`
-      INSERT INTO studysets (user_id, title, date)
-      VALUES (${user_id}, ${title}, ${date})
+      INSERT INTO studysets (user_id, title, date, terms, definitions)
+      VALUES (${user_id}, ${title}, ${date}, ARRAY[${terms}], ARRAY[${definitions}])
       ON CONFLICT (set_id) DO NOTHING;
     `;
     console.log(`Added ${title} to studysets table`);
