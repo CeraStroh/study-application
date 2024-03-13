@@ -30,7 +30,7 @@ async function seedUsers(client) {
         return client.sql`
         INSERT INTO users (user_id, name, email, password)
         VALUES (${user.user_id}, ${user.name}, ${user.email}, ${hashedPassword})
-        ON CONFLICT (user_id) DO NOTHING;
+        ON CONFLICT (id) DO NOTHING;
       `;
       }),
     );
