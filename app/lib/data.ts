@@ -7,16 +7,16 @@ import { unstable_noStore as noStore } from 'next/cache';
 export async function fetchStudySets() {
 	noStore();
 	try {
-		const studysetsoriginal = await sql<StudySetsTable>`
+		const studysets = await sql<StudySetsTable>`
 			SELECT
-				studysetsoriginal.set_id,
-				studysetsoriginal.title,
-				studysetsoriginal.date
-			FROM studysetsoriginal
+				studysets.set_id,
+				studysets.title,
+				studysets.date
+			FROM studysets
 			ORDER BY title ASC
 		`;
 
-		return studysetsoriginal.rows;
+		return studysets.rows;
 	} catch (error) {
 		console.error('Database Error:', error);
 		throw new Error('Failed to fetch study sets');
