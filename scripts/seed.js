@@ -47,45 +47,6 @@ async function seedUsers(client) {
   }
 }
 
-async function seedStudySetsOriginal(client) {
-  try {
-    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-    // Create the "studysetsoriginal" table if it doesn't exist
-    const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS studysetsoriginal (
-      set_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      user_id UUID NOT NULL,
-      title VARCHAR(255) NOT NULL,
-      date DATE NOT NULL
-    );
-  `;
-
-    console.log(`Created "studysetsoriginal" table`);
-
-    // Insert data into the "studysetsoriginal" table
-    const insertedStudysets = await Promise.all(
-      studysets.map(
-        (studyset) => client.sql`
-        INSERT INTO studysetsoriginal (user_id, title, date)
-        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.date})
-        ON CONFLICT (set_id) DO NOTHING;
-      `,
-      ),
-    );
-
-    console.log(`Seeded ${insertedStudysets.length} study sets into studysetsoriginal`);
-
-    return {
-      createTable,
-      studysets: insertedStudysets,
-    };
-  } catch (error) {
-    console.error('Error seeding study sets original:', error);
-    throw error;
-  }
-}
-
 async function seedStudySets(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -127,123 +88,11 @@ async function seedStudySets(client) {
   }
 }
 
-async function seedMidwestUSCapitals(client) {
-  try {
-    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-    // Create the first set table if it doesn't exist
-    const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS MidwestUSCapitals (
-    term VARCHAR(255) NOT NULL,
-    definition VARCHAR(255) NOT NULL
-  );
-`;
-
-    console.log(`Created "MidwestUSCapitals" table`);
-
-    // Insert data into the "MidwestUSCapitals" table
-    const insertedMidwestUSCapitals = await Promise.all(
-      MidwestUSCapitals.map(
-        (MidwestUSCapital) => client.sql`
-        INSERT INTO MidwestUSCapitals (term, definition)
-        VALUES (${MidwestUSCapital.term}, ${MidwestUSCapital.definition});
-      `,
-      ),
-    );
-
-    console.log(`Seeded ${insertedMidwestUSCapitals.length} MidwestUSCapitals`);
-
-    return {
-      createTable,
-      MidwestUSCapitals: insertedMidwestUSCapitals,
-    };
-  } catch (error) {
-    console.error('Error seeding MidwestUSCapitals:', error);
-    throw error;
-  }
-}
-
-async function seedCOSCClasses(client) {
-  try {
-    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-    // Create the second set table if it doesn't exist
-    const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS COSCClasses (
-    term VARCHAR(255) NOT NULL,
-    definition VARCHAR(255) NOT NULL
-  );
-`;
-
-    console.log(`Created "COSCClasses" table`);
-
-    // Insert data into the "COSCClasses" table
-    const insertedCOSCClasses = await Promise.all(
-      COSCClasses.map(
-        (COSCClass) => client.sql`
-        INSERT INTO COSCClasses (term, definition)
-        VALUES (${COSCClass.term}, ${COSCClass.definition});
-      `,
-      ),
-    );
-
-    console.log(`Seeded ${insertedCOSCClasses.length} COSCClasses`);
-
-    return {
-      createTable,
-      COSCClasses: insertedCOSCClasses,
-    };
-  } catch (error) {
-    console.error('Error seeding COSCClasses:', error);
-    throw error;
-  }
-}
-
-async function seedFinancialAccountingExam1(client) {
-  try {
-    await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-    // Create the third set table if it doesn't exist
-    const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS FinancialAccountingExam1 (
-    term VARCHAR(255) NOT NULL,
-    definition VARCHAR(255) NOT NULL
-  );
-`;
-
-    console.log(`Created "FinancialAccountingExam1" table`);
-
-    // Insert data into the "FinancialAccountingExam1" table
-    const insertedFinancialAccountingExam1 = await Promise.all(
-      FinancialAccountingExam1.map(
-        (FinancialAccountingExam) => client.sql`
-        INSERT INTO FinancialAccountingExam1 (term, definition)
-        VALUES (${FinancialAccountingExam.term}, ${FinancialAccountingExam.definition});
-      `,
-      ),
-    );
-
-    console.log(`Seeded ${insertedFinancialAccountingExam1.length} financial accounting`);
-
-    return {
-      createTable,
-      FinancialAccountingExam1: insertedFinancialAccountingExam1,
-    };
-  } catch (error) {
-    console.error('Error seeding FinancialAccountingExam1:', error);
-    throw error;
-  }
-}
-
 async function main() {
   const client = await db.connect();
 
   await seedUsers(client);
-  await seedStudySetsOriginal(client);
   await seedStudySets(client);
-  // await seedMidwestUSCapitals(client);
-  // await seedCOSCClasses(client);
-  // await seedFinancialAccountingExam1(client);
 
   await client.end();
 }
