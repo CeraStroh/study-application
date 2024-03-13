@@ -8,7 +8,8 @@ import { redirect } from 'next/navigation';
 // import { AuthError } from 'next-auth';
 
 const FormSchema = z.object({
-  id: z.string(),
+  user_id: z.string(),
+  set_id: z.string(),
   title: z.string({
     invalid_type_error: 'Please enter a title.',
   }),
@@ -17,7 +18,7 @@ const FormSchema = z.object({
   date: z.string(),
 });
 
-const CreateStudySet = FormSchema.omit({ id: true, date: true });
+const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
 
 export type State = {
   errors?: {
@@ -36,10 +37,10 @@ export async function createStudySet(formData: FormData) {
     terms: formData.getAll('term'),
     definitions: formData.getAll('definition'),
   });
-  const compactTitle = `${title}`.replace(/\s/g, "");
+  const user_id = '410544b2-4001-4271-9855-fec4b6a6442a';
   const date = new Date().toISOString().split('T')[0];
   // console.log(`after validatedFields`);
-  // // If form validation fails, return errors early. Otherwise, continue.
+  // If form validation fails, return errors early. Otherwise, continue.
   // if (!validatedFields.success) {
   //   console.log(`in unusccessful validatedFields`);
   //   return {
@@ -48,51 +49,27 @@ export async function createStudySet(formData: FormData) {
   //   };
   // }
   // console.log(`before preparing data`);
-  // // Prepare data for insertion into the database
+  // Prepare data for insertion into the database
   // const { title, terms, definitions } = validatedFields.data;
   console.log(`title: ${title}`);
-  console.log(`compactTitle: ${compactTitle}`);
   console.log(`terms: ${terms}`);
   console.log(`definitions: ${definitions}`);
 
   // Insert data into the database
   try {
     await sql`
-      INSERT INTO studysets (user_id, title, date)
-      VALUES ("410544b2-4001-4271-9855-fec4b6a6442a", ${compactTitle}, ${date})
+      INSERT INTO studysets (user_id, title, date, terms, definitions)
+      VALUES (${user_id}, ${title}, ${date}, ARRAY[${terms}], ARRAY[${definitions}])
+      ON CONFLICT (set_id) DO NOTHING;
     `;
+    console.log(`Added ${title} to studysets table`);
   } catch (error) {
     // If a database error occurs, return a more specific error.
     return {
-      message: 'Database Error: Failed to Create Study Set.',
+      message: 'Database Error: Failed to add Study Set to table.',
     };
   }
 
-  // Create Study Set table
-  try {
-    await sql`
-    CREATE TABLE IF NOT EXISTS ${compactTitle} (
-      term VARCHAR(255) NOT NULL,
-      definition VARCHAR(255) NOT NULL,
-    `
-  } catch (error) {
-    return {
-      message: 'Database Error: Failed to create ${compactTitle} table',
-    };
-  }
-
-  // Insert pairs into table
-  try {
-    await sql`
-    INSERT INTO ${compactTitle} (term, definition)
-    VALUES (${terms}, ${definitions})
-    `;
-  } catch (error) {
-    return {
-      message: 'Database Error: Failed to insert pairs into ${compactTitle} table',
-    };
-  }
- 
   // Revalidate the cache for the home page and redirect the user.
   revalidatePath('/home');
   redirect('/home');

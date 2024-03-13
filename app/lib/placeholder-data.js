@@ -14,116 +14,26 @@ const studysets = [
 		user_id: users[0].user_id,
 		title: 'Midwest US Capitals',
 		date: '2024-2-18',
+		terms: ['Springfield', 'Indianapolis', 'Des Moines', 'Topeka', 'Lansing', 'Saint Paul', 'Jefferson City', 'Lincoln', 'Bismarck', 'Columbus', 'Pierre', 'Madison'],
+		definitions: ['Illinois', 'Indiana', 'Iowa', 'Kansas', 'Michigan', 'Minnesota', 'Missouri', 'Nebraska', 'North Dakota', 'Ohio', 'South Dakota', 'Wisconsin'],
 	},
 	{
 		user_id: users[0].user_id,
-		title: 'COSC Classes',
+		title: 'Spanish Numbers',
 		date: '2024-2-17',
+		terms: ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'],
+		definitions: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'],
 	},
 	{
 		user_id: users[0].user_id,
 		title: 'Financial Accounting Exam 1',
 		date: '2024-2-16',
+		terms: ['Accounting Equation', 'Assets', 'Liabilities', 'Stockholders\' Equity'],
+		definitions: ['Assets = Liabilities + Stockholders\' Equity', 'things company owns (land, cash, equipment, buildings, inventory, supplies, computers, trucks, office furniture)', 'amount business owes/debt (Note Payable-loan, Accounts payable)', 'owners\' claim to business'],
 	},
 ];
-
-const MidwestUSCapitals = [
-	{
-		term: 'Springfield',
-		definition: 'Illinois',
-	},
-	{
-		term: 'Indianapolis',
-		definition: 'Indiana',
-	},
-	{
-		term: 'Des Moines',
-		definition: 'Iowa',
-	},
-	{
-		term: 'Topeka',
-		definition: 'Kansas',
-	},
-	{
-		term: 'Lansing',
-		definition: 'Michigan',
-	},
-	{
-		term: 'Saint Paul',
-		definition: 'Minnesota',
-	},
-	{
-		term: 'Jefferson City',
-		definition: 'Missouri',
-	},
-	{
-		term: 'Lincoln',
-		definition: 'Nebraska',
-	},
-	{
-		term: 'Bismarck',
-		definition: 'North Dakota',
-	},
-	{
-		term: 'Columbus',
-		definition: 'Ohio',
-	},
-	{
-		term: 'Pierre',
-		definition: 'South Dakota',
-	},
-	{
-		term: 'Madison',
-		definition: 'Wisconsin',
-	},
-]
-
-const COSCClasses = [
-	{
-		term: 'COSC-109',
-		definition: 'Intro to Information Mgmt',
-	},
-	{
-		term: 'COSC-110',
-		definition: 'Intro to Computer Science',
-	},
-	{
-		term: 'COSC-130',
-		definition: 'Data Structures',
-	},
-	{
-		term: 'COSC-346',
-		definition: 'Cybersecurity',
-	},
-	{
-		term: 'COSC-420',
-		definition: 'Senior Project',
-	},
-]
-
-const FinancialAccountingExam1 = [
-	{
-		term: 'Accounting Equation',
-		definition: 'Assets = Liabilities + Stockholders\' Equity',
-	},
-	{
-		term: 'Assets',
-		definition: 'things company owns (land, cash, equipment, buildings, inventory, supplies, computers, trucks, office furniture)',
-	},
-	{
-		term: 'Liabilities',
-		definition: 'amount business owes/debt (Note Payable-loan, Accounts payable)',
-	},
-	{
-		term: 'Stockholders\' Equity',
-		definition: 'owners\' claim to business',
-	},
-]
 
 module.exports = {
 	users,
 	studysets,
-	MidwestUSCapitals,
-	COSCClasses,
-	FinancialAccountingExam1,
 };
