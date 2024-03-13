@@ -4,9 +4,6 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import {
-	StudySet
-} from './definitions';
 // import { signIn } from '@/auth';
 // import { AuthError } from 'next-auth';
 
@@ -40,11 +37,10 @@ export async function createStudySet(formData: FormData) {
     terms: formData.getAll('term'),
     definitions: formData.getAll('definition'),
   });
-  // const compact_title = `${title}`.toLowerCase().replace(/\s/g, "");
   const user_id = '410544b2-4001-4271-9855-fec4b6a6442a';
   const date = new Date().toISOString().split('T')[0];
   // console.log(`after validatedFields`);
-  // // If form validation fails, return errors early. Otherwise, continue.
+  // If form validation fails, return errors early. Otherwise, continue.
   // if (!validatedFields.success) {
   //   console.log(`in unusccessful validatedFields`);
   //   return {
@@ -53,28 +49,13 @@ export async function createStudySet(formData: FormData) {
   //   };
   // }
   // console.log(`before preparing data`);
-  // // Prepare data for insertion into the database
+  // Prepare data for insertion into the database
   // const { title, terms, definitions } = validatedFields.data;
   console.log(`title: ${title}`);
-  // console.log(`compact_title: ${compact_title}`);
   console.log(`terms: ${terms}`);
   console.log(`definitions: ${definitions}`);
 
   // Insert data into the database
-  // try {
-  //   await sql`
-  //     INSERT INTO studysetsoriginal (user_id, title, date)
-  //     VALUES (${user_id}, ${title}, ${date})
-  //     ON CONFLICT (set_id) DO NOTHING;
-  //   `;
-  //   console.log(`Added ${title} to studysetsoriginal table`);
-  // } catch (error) {
-  //   // If a database error occurs, return a more specific error.
-  //   return {
-  //     message: 'Database Error: Failed to add Study Set to table.',
-  //   };
-  // }
-  // console.log(`in between studysetsoriginal and studysets`);
   try {
     await sql`
       INSERT INTO studysets (user_id, title, date, terms, definitions)
@@ -88,36 +69,7 @@ export async function createStudySet(formData: FormData) {
       message: 'Database Error: Failed to add Study Set to table.',
     };
   }
-  // console.log(`in between studysets table and creating table`);
-  // console.log(`compact_title: ${compact_title}`);
-  // // Create Study Set table
-  // try {
-  //   await sql`
-  //     CREATE TABLE ${compact_title} (
-  //       term VARCHAR(255),
-  //       definition VARCHAR(255)
-  //     );
-  //   `;
-  //   console.log(`Created ${compact_title} table`);
-  // } catch (error) {
-  //   return {
-  //     message: 'Database Error: Failed to create ${compact_title} table',
-  //   };
-  // }
-  // console.log(`in between creating table and adding pairs`);
-  // // Insert pairs into table
-  // try {
-  //   await sql`
-  //     INSERT INTO ${compact_title} (term, definition)
-  //     VALUES (${terms}, ${definitions});
-  //   `;
-  //   console.log(`Inserted pairs into ${compact_title} table`);
-  // } catch (error) {
-  //   return {
-  //     message: 'Database Error: Failed to insert pairs into ${compact_title} table',
-  //   };
-  // }
-  // console.log(`in between adding pairs and revalidating/redirecting`);
+
   // Revalidate the cache for the home page and redirect the user.
   revalidatePath('/home');
   redirect('/home');
