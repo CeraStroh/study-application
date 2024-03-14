@@ -19,6 +19,7 @@ const FormSchema = z.object({
 });
 
 const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
+const UpdateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true});
 
 export type State = {
   errors?: {
@@ -71,6 +72,23 @@ export async function createStudySet(formData: FormData) {
   }
 
   // Revalidate the cache for the home page and redirect the user.
+  revalidatePath('/home');
+  redirect('/home');
+}
+
+export async function updateStudySet(set_id: string, formData: FormData) {
+  const { title, terms, definitions } = UpdateStudySet.parse({
+    title: formData.get('title'),
+    terms: formData.getAll('term'),
+    definitions: formData.getAll('definition'),
+  });
+
+  await sql`
+    UPDATE studysets
+    SET title = ${title}, terms = ${terms}, definitions = ${definitions}
+    WHERE set_id = ${set_id}
+  `;
+
   revalidatePath('/home');
   redirect('/home');
 }
