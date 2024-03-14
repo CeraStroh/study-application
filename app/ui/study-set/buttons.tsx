@@ -13,3 +13,14 @@ export function CreateStudySet() {
     </Link>
   );
 }
+
+export function UpdateStudySet({ set_id }: { set_id: string }) {
+  return (
+    <Link
+      href={`/home/study-set/${set_id}/edit`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
+      <PencilIcon className="w-5" />
+    </Link>
+  )
+}
