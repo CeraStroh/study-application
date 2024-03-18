@@ -75,6 +75,12 @@ export async function createStudySet(formData: FormData) {
   redirect('/home');
 }
 
+export async function deleteStudySet(set_id: string) {
+  await sql`DELETE FROM studysets WHERE set_id = ${set_id}`;
+  console.log(`Deleted ${set_id} from studysets table`);
+  revalidatePath('/home');
+}
+
 export async function createTest(formData: FormData) {
   const rawFormData = {
     title: formData.get('title'),
