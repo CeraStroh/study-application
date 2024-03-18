@@ -23,6 +23,13 @@ export type StudySetForm = {
 	definition: string;
 };
 
+export type StudySetEditForm = {
+	set_id: string;
+	title: string;
+	terms: object;
+	definitions: object;
+};
+
 export type StudySetField = {
 	title: string;
 }
