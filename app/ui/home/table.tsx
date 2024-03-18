@@ -1,5 +1,6 @@
 import { fetchStudySets } from "@/app/lib/data";
 import { formatDateToLocal } from "@/app/lib/utils";
+import { DeleteStudySet } from "../study-set/buttons";
 
 export default async function StudySetsTable() {
 	const studysets = await fetchStudySets();
@@ -23,6 +24,9 @@ export default async function StudySetsTable() {
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p>{formatDateToLocal(studyset.date)}</p>
+                  </div>
+                  <div>
+                    <DeleteStudySet set_id={studyset.set_id} />
                   </div>
                 </div>
               </div>
@@ -56,6 +60,11 @@ export default async function StudySetsTable() {
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatDateToLocal(studyset.date)}
                   </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+										<div className="flex justify-end gap-3">
+											<DeleteStudySet set_id={studyset.set_id} />
+										</div>
+									</td>
                 </tr>
               ))}
             </tbody>
