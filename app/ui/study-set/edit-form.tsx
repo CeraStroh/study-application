@@ -2,17 +2,20 @@
 
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { StudySetForm } from '@/app/lib/definitions';
+import { StudySetForm, StudySetEditForm } from '@/app/lib/definitions';
 import { updateStudySet } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 import { useState } from 'react';
+import { fetchTermsBySetId, fetchDefinitionsBySetId } from '@/app/lib/data';
 
-export default function Form({
+export default async function Form({
 	studyset,
 }: {
 	studyset: StudySetForm;
 }) {
-	const updateStudySetWithSetId = updateStudySet.bind(null, studyset.set_id);
+	const terms = await fetchTermsBySetId(studyset.set_id);
+  const definitions = await fetchDefinitionsBySetId(studyset.set_id);
+  const updateStudySetWithSetId = updateStudySet.bind(null, studyset.set_id);
 	const [pairs, setPairs] = useState<{ term: string; definition: string; }[]>([{ term: "", definition: "" }]);
 
 	const handleAddPair = () => {
@@ -66,48 +69,52 @@ export default function Form({
         {/* Term-Definition pairs */}
         <div className="mb-1">
           {pairs.map((item, index) => (
-            <div className="input_container" key={index}>
-              <div className="w-full">
-                <label htmlFor="term" className="mb-2 block text-sm font-medium text-black">
-                  Term
-                </label>
-                <input
-                  id="term"
-                  name="term"
-                  type="string"
-                  value={item.term}
-                  onChange={(event) => handleChange(event, index)}
-                  placeholder="Enter term"
-                  className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                  // aria-describedby="pairs-error"
-                />
-              </div>
-              <div className="w-full">
-                <label htmlFor="definition" className="mb-2 block text-sm font-medium text-black">
-                  Definition
-                </label>
-                <input
-                  id="definition"
-                  name="definition"
-                  type="string"
-                  value={item.definition}
-                  onChange={(event) => handleChange(event, index)}
-                  placeholder="Enter definition"
-                  className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                  // aria-describedby="pairs-error"
-                />
-              </div>
-              <div className="mb-5">
-              {pairs.length > 1 && (
-                <Button onClick={() => handleDeletePair(index)}>Delete</Button>
-              )}
-              </div>
-              <div className="mb-5">
-              {index === pairs.length - 1 && (
-                <Button onClick={() => handleAddPair()}>Add</Button>
-              )}
-              </div>
-            </div>
+            // {studyset.terms?.map((term) => (
+            //   {studyset.definitions?.map((definition) => (
+                <div className="input_container" key={index}>
+                  <div className="w-full">
+                    <label htmlFor="term" className="mb-2 block text-sm font-medium text-black">
+                      Term
+                    </label>
+                    <input
+                      id="term"
+                      name="term"
+                      // type="string"
+                      value={studyset.terms}//{item.term}
+                      onChange={(event) => handleChange(event, index)}
+                      placeholder="Enter term"
+                      className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
+                      // aria-describedby="pairs-error"
+                    />
+                  </div>
+                  <div className="w-full">
+                    <label htmlFor="definition" className="mb-2 block text-sm font-medium text-black">
+                      Definition
+                    </label>
+                    <input
+                      id="definition"
+                      name="definition"
+                      // type="string"
+                      value={studyset.definitions}//{item.definition}
+                      onChange={(event) => handleChange(event, index)}
+                      placeholder="Enter definition"
+                      className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
+                      // aria-describedby="pairs-error"
+                    />
+                  </div>
+                  <div className="mb-5">
+                  {pairs.length > 1 && (
+                    <Button onClick={() => handleDeletePair(index)}>Delete</Button>
+                  )}
+                  </div>
+                  <div className="mb-5">
+                  {index === pairs.length - 1 && (
+                    <Button onClick={() => handleAddPair()}>Add</Button>
+                  )}
+                  </div>
+                </div>
+            //   ))}
+            // ))}
           ))}
           {/* <div id="pairs-error" aria-live="polite" aria-atomic="true">
             {state.errors?.jsonPairs &&
