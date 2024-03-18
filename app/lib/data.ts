@@ -1,7 +1,8 @@
 import { sql } from '@vercel/postgres';
 import {
 	StudySetsTable,
-	StudySetForm
+	StudySetForm,
+	StudySetEditForm	
 } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -45,5 +46,39 @@ export async function fetchStudySetBySetId(set_id: string) {
 	} catch (error) {
 		console.error('Database Error:', error);
 		throw new Error('Failed to fetch study set.');
+	}
+}
+
+export async function fetchTermsBySetId(set_id: string) {
+	noStore();
+	try {
+		const terms = await sql<StudySetEditForm>`
+			SELECT
+				studysets.terms
+			FROM studysets
+			WHERE studysets.set_id = ${set_id};
+		`;
+
+		return terms.rows;
+	} catch (error) {
+		console.error('Database Error:', error);
+		throw new Error('Failed to fetch terms.');
+	}
+}
+
+export async function fetchDefinitionsBySetId(set_id: string) {
+	noStore();
+	try {
+		const definitions = await sql<StudySetEditForm>`
+			SELECT
+				studysets.definitions
+			FROM studysets
+			WHERE studysets.set_id = ${set_id};
+		`;
+
+		return definitions.rows;
+	} catch (error) {
+		console.error('Database Error:', error);
+		throw new Error('Failed to fetch definitions.');
 	}
 }
