@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { set_id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Study Sets', href: '/home/study-set' },
+          { label: 'Study Sets', href: '/home/' },
           {
             label: 'Edit Study Set',
             href: `/home/study-set/${set_id}/edit`,
