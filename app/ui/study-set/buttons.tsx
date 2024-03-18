@@ -1,6 +1,6 @@
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-//import { deleteStudySet } from '@/app/lib/actions';
+import { deleteStudySet } from '@/app/lib/actions';
 
 export function CreateStudySet() {
   return (
@@ -12,4 +12,17 @@ export function CreateStudySet() {
       <PlusIcon className="h-5 md:ml-4" />
     </Link>
   );
+}
+
+export function DeleteStudySet({ set_id }: { set_id: string }) {
+  const deleteStudySetWithId = deleteStudySet.bind(null, set_id);
+
+  return (
+    <form action={deleteStudySetWithId}>
+      <button className="rounded-md border p-2 hover:bg-gray-100">
+        <span className="sr-only">Delete</span>
+        <TrashIcon className="w-4" />
+      </button>
+    </form>
+  )
 }
