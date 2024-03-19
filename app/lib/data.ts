@@ -52,14 +52,14 @@ export async function fetchStudySetBySetId(set_id: string) {
 export async function fetchTermsBySetId(set_id: string) {
 	noStore();
 	try {
-		const terms = await sql<StudySetEditForm>`
+		const terms = await sql`
 			SELECT
-				studysets.terms
+				*
 			FROM studysets
-			WHERE studysets.set_id = ${set_id};
+			WHERE set_id = ${set_id};
 		`;
-
-		return terms.rows;
+		console.log(`retrieved terms from ${set_id}: ${terms}`)
+		return terms;
 	} catch (error) {
 		console.error('Database Error:', error);
 		throw new Error('Failed to fetch terms.');
