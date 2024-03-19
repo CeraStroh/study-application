@@ -13,8 +13,10 @@ export default async function Form({
 }: {
 	studyset: StudySetForm;
 }) {
-	// const terms = await fetchTermsBySetId(studyset.set_id);
-  // const definitions = await fetchDefinitionsBySetId(studyset.set_id);
+  // const [terms, definitions] = await Promise.all([
+  //   fetchTermsBySetId(studyset.set_id),
+  //   fetchDefinitionsBySetId(studyset.set_id),
+  // ]);
   const updateStudySetWithSetId = updateStudySet.bind(null, studyset.set_id);
 	const [pairs, setPairs] = useState<{ term: string; definition: string; }[]>([{ term: "", definition: "" }]);
 
