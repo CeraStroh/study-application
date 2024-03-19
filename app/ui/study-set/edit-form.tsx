@@ -13,8 +13,8 @@ export default async function Form({
 }: {
 	studyset: StudySetForm;
 }) {
-	const terms = await fetchTermsBySetId(studyset.set_id);
-  const definitions = await fetchDefinitionsBySetId(studyset.set_id);
+	// const terms = await fetchTermsBySetId(studyset.set_id);
+  // const definitions = await fetchDefinitionsBySetId(studyset.set_id);
   const updateStudySetWithSetId = updateStudySet.bind(null, studyset.set_id);
 	const [pairs, setPairs] = useState<{ term: string; definition: string; }[]>([{ term: "", definition: "" }]);
 
@@ -126,6 +126,8 @@ export default async function Form({
           </div> */}
           {/* <p>This is what the data looks like</p>
           <div className="body"> {jsonPairs} </div> */}
+          {/* <p>Here are the terms for {studyset.title}</p>
+          <p>{terms}</p> */}
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
