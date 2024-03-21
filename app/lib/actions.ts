@@ -88,8 +88,9 @@ export async function createTest(formData: FormData) {
     definitions: formData.getAll('definition'),
   };
   // Test it out:
-  // console.log(rawFormData);
+  console.log(rawFormData);
   // console.log(typeof rawFormData.title);
   // console.log(typeof rawFormData.terms);
   // console.log(typeof rawFormData.definitions);
+  redirect('/home');
 }
