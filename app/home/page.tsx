@@ -8,11 +8,11 @@ export default async function Page() {
         <div className="flex w-full items-center justify-between">
           <h1>Home Page</h1>
         </div>
-        <h2>Your Study Sets</h2>
-        <Table />
-        <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <div className="mt-4 flex items-center justify-end gap-2 md:mt-8">
           <CreateStudySet />
         </div>
+        <h2>Your Study Sets</h2>
+        <Table />
       </div>
     </main>
   );
