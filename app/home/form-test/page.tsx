@@ -18,7 +18,8 @@ export default function Form() {
       setPairs([...pairs, newPair]);
     };
 
-  const handleDeletePair = (index: number) => {
+  const handleDeletePair = (index: number, event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     let data = [...pairs];
     data.splice(index, 1);
     setPairs(data);
@@ -63,7 +64,7 @@ export default function Form() {
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
             />
             {pairs.length > 1 && (
-              <Button onClick={() => handleDeletePair(index)}>Delete</Button>
+              <Button onClick={(event) => handleDeletePair(index, event)}>Delete</Button>
             )}
             {index === pairs.length - 1 && (
               <Button onClick={handleAddPair}>Add</Button>
