@@ -13,6 +13,7 @@ export type StudySet = {
 	title: string;
 	terms: object;
 	definitions: object;
+	study_content: object;
 	date: string;
 };
 
@@ -21,6 +22,7 @@ export type StudySetForm = {
 	title: string;
 	term: string;
 	definition: string;
+	study_content: object;
 };
 
 export type StudySetEditForm = {
@@ -28,6 +30,7 @@ export type StudySetEditForm = {
 	title: string;
 	terms: object;
 	definitions: object;
+	study_content: object;
 };
 
 export type StudySetField = {
