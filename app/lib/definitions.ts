@@ -13,7 +13,7 @@ export type StudySet = {
 	title: string;
 	terms: object;
 	definitions: object;
-	study_content: object;
+	study_content: Pair[];
 	date: string;
 };
 
@@ -22,23 +22,16 @@ export type StudySetForm = {
 	title: string;
 	term: string;
 	definition: string;
-	study_content: object;
+	study_content: string;
 };
-
-export type StudySetEditForm = {
-	set_id: string;
-	title: string;
-	terms: object;
-	definitions: object;
-	study_content: object;
-};
-
-export type StudySetField = {
-	title: string;
-}
 
 export type StudySetsTable = {
 	set_id: string;
 	title: string;
 	date: string;
+}
+
+export type Pair = {
+	term: string;
+	definition: string;
 }
