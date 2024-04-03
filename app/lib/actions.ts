@@ -15,16 +15,19 @@ const FormSchema = z.object({
   }),
   terms: z.coerce.string(),
   definitions: z.coerce.string(),
+  study_content: z.coerce.string(),
   date: z.string(),
 });
 
 const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
+const UpdateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true});
 
 export type State = {
   errors?: {
     title?: string[];
     terms?: object[];
     definitions?: object[];
+    study_content?: object[];
   };
   message?: string | null;
 };
@@ -32,10 +35,11 @@ export type State = {
 export async function createStudySet(formData: FormData) {
   console.log(`Running createStudySet()`);
   //Validate form using Zod
-  const { title, terms, definitions } = CreateStudySet.parse({
+  const { title, terms, definitions, study_content } = CreateStudySet.parse({
     title: formData.get('title'),
     terms: formData.getAll('term'),
     definitions: formData.getAll('definition'),
+    study_content: formData.get('study_content'),
   });
   const user_id = '410544b2-4001-4271-9855-fec4b6a6442a';
   const date = new Date().toISOString().split('T')[0];
@@ -54,12 +58,12 @@ export async function createStudySet(formData: FormData) {
   console.log(`title: ${title}`);
   console.log(`terms: ${terms}`);
   console.log(`definitions: ${definitions}`);
-
+  console.log(`study_content: ${study_content}`);
   // Insert data into the database
   try {
     await sql`
-      INSERT INTO studysets (user_id, title, date, terms, definitions)
-      VALUES (${user_id}, ${title}, ${date}, ARRAY[${terms}], ARRAY[${definitions}])
+      INSERT INTO studysets (user_id, title, date, terms, definitions, study_content)
+      VALUES (${user_id}, ${title}, ${date}, ARRAY[${terms}], ARRAY[${definitions}], ARRAY[${study_content}])
       ON CONFLICT (set_id) DO NOTHING;
     `;
     console.log(`Added ${title} to studysets table`);
@@ -71,6 +75,25 @@ export async function createStudySet(formData: FormData) {
   }
 
   // Revalidate the cache for the home page and redirect the user.
+  revalidatePath('/home');
+  redirect('/home');
+}
+
+
+export async function updateStudySet(set_id: string, formData: FormData) {
+  const { title, terms, definitions, study_content } = UpdateStudySet.parse({
+    title: formData.get('title'),
+    terms: formData.getAll('term'),
+    definitions: formData.getAll('definition'),
+    study_content: formData.get('study_content'),
+  });
+
+  await sql`
+    UPDATE studysets
+    SET title = ${title}, terms = ARRAY[${terms}], definitions = ARRAY[${definitions}], study_content = ARRAY[${study_content}]
+    WHERE set_id = ${set_id}
+  `;
+
   revalidatePath('/home');
   redirect('/home');
 }
