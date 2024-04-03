@@ -79,6 +79,7 @@ export async function createStudySet(formData: FormData) {
   redirect('/home');
 }
 
+
 export async function updateStudySet(set_id: string, formData: FormData) {
   const { title, terms, definitions, study_content } = UpdateStudySet.parse({
     title: formData.get('title'),
@@ -97,6 +98,12 @@ export async function updateStudySet(set_id: string, formData: FormData) {
   redirect('/home');
 }
 
+export async function deleteStudySet(set_id: string) {
+  await sql`DELETE FROM studysets WHERE set_id = ${set_id}`;
+  console.log(`Deleted ${set_id} from studysets table`);
+  revalidatePath('/home');
+}
+
 export async function createTest(formData: FormData) {
   const rawFormData = {
     title: formData.get('title'),
@@ -104,8 +111,9 @@ export async function createTest(formData: FormData) {
     definitions: formData.getAll('definition'),
   };
   // Test it out:
-  // console.log(rawFormData);
+  console.log(rawFormData);
   // console.log(typeof rawFormData.title);
   // console.log(typeof rawFormData.terms);
   // console.log(typeof rawFormData.definitions);
+  redirect('/home');
 }
