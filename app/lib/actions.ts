@@ -59,7 +59,6 @@ export async function createStudySet(formData: FormData) {
   console.log(`terms: ${terms}`);
   console.log(`definitions: ${definitions}`);
   console.log(`study_content: ${study_content}`);
-
   // Insert data into the database
   try {
     await sql`
@@ -81,15 +80,16 @@ export async function createStudySet(formData: FormData) {
 }
 
 export async function updateStudySet(set_id: string, formData: FormData) {
-  const { title, terms, definitions } = UpdateStudySet.parse({
+  const { title, terms, definitions, study_content } = UpdateStudySet.parse({
     title: formData.get('title'),
     terms: formData.getAll('term'),
     definitions: formData.getAll('definition'),
+    study_content: formData.get('study_content'),
   });
 
   await sql`
     UPDATE studysets
-    SET title = ${title}, terms = ${terms}, definitions = ${definitions}
+    SET title = ${title}, terms = ARRAY[${terms}], definitions = ARRAY[${definitions}], study_content = ARRAY[${study_content}]
     WHERE set_id = ${set_id}
   `;
 
