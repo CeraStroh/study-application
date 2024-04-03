@@ -1,23 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  CheckIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  PlusCircleIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
-import { createStudySet } from '@/app/lib/actions';
+import { StudySetForm, Pair } from '@/app/lib/definitions';
+import { updateStudySet } from '@/app/lib/actions';
 import { useState } from 'react';
-import { Pair } from '@/app/lib/definitions';
 
-export default function Form() {
-  const [pairs, setPairs] = useState<Pair[]>([{ term: "", definition: "" }]);
+export default function Form({
+	studyset,
+}: {
+	studyset: StudySetForm;
+}) {
+  const updateStudySetWithSetId = updateStudySet.bind(null, studyset.set_id);
+  
+  const [pairs, setPairs] = useState<Pair[]>(JSON.parse(studyset.study_content));
   const study_content = JSON.stringify(pairs);
 
-  const handleAddPair = () => {
+	const handleAddPair = () => {
     setPairs([...pairs, { term: "", definition: "" }]);
   };
 
@@ -30,15 +29,14 @@ export default function Form() {
     setPairs(onChangeValue);
   };
 
-  const handleDeletePair = (index: number, event:  React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleDeletePair = (index: number): void => {
     const newArray = [...pairs];
     newArray.splice(index, 1);
     setPairs(newArray);
   };
 
   return (
-    <form action={createStudySet}>
+    <form action={updateStudySetWithSetId}>
       <div className="rounded-md bg-gray-400 p-4 md:p-6">
         {/* Title Name */}
         <div className="mb-4">
@@ -53,6 +51,7 @@ export default function Form() {
                 placeholder="Enter title"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
                 aria-describedby="title-error"
+								value={studyset.title}
             />
           </div>
           {/* <div id="title-error" aria-live="polite" aria-atomic="true">
@@ -76,7 +75,7 @@ export default function Form() {
                 <input
                   id="term"
                   name="term"
-                  type="string"
+                  // type="string"
                   value={item.term}
                   onChange={(event) => handleChange(event, index)}
                   placeholder="Enter term"
@@ -91,7 +90,7 @@ export default function Form() {
                 <input
                   id="definition"
                   name="definition"
-                  type="string"
+                  // type="string"
                   value={item.definition}
                   onChange={(event) => handleChange(event, index)}
                   placeholder="Enter definition"
@@ -101,7 +100,7 @@ export default function Form() {
               </div>
               <div className="mb-5">
               {pairs.length > 1 && (
-                <Button onClick={(event) => handleDeletePair(index, event)}>Delete</Button>
+                <Button onClick={() => handleDeletePair(index)}>Delete</Button>
               )}
               </div>
               <div className="mb-5">
@@ -119,6 +118,8 @@ export default function Form() {
                 </p>
               ))}
           </div> */}
+          {/* <p>This is what the database content looks like</p> */}
+          {/* <div className="body"> {studyset.study_content} </div> */}
           {/* <p>This is what the study_content variable looks like</p>
           <div className="body"> {study_content} </div> */}
           <input type="hidden" name="study_content" value={study_content} />
@@ -126,12 +127,12 @@ export default function Form() {
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
-          href="/home/"
+          href="/home"
           className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
         >
           Cancel
         </Link>
-        <Button type="submit">Create</Button>
+        <Button type="submit">Save</Button>
       </div>
     </form>
   );
