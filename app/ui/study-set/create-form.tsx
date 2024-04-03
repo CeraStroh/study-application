@@ -1,6 +1,5 @@
 'use client';
 
-import { StudySetField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
   CheckIcon,
@@ -11,13 +10,11 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createStudySet } from '@/app/lib/actions';
-import { useFormState } from 'react-dom';
 import { useState } from 'react';
+import { Pair } from '@/app/lib/definitions';
 
 export default function Form() {
-  const initialState = { message: null, errors: {} };
-  // const [state, dispatch] = useFormState(createStudySet, initialState);
-  const [pairs, setPairs] = useState<{ term: string; definition: string; }[]>([{ term: "", definition: "" }]);
+  const [pairs, setPairs] = useState<Pair[]>([{ term: "", definition: "" }]);
   const study_content = JSON.stringify(pairs);
 
   const handleAddPair = () => {
@@ -122,7 +119,7 @@ export default function Form() {
                 </p>
               ))}
           </div> */}
-          {/* <p>This is what the data looks like</p>
+          {/* <p>This is what the study_content variable looks like</p>
           <div className="body"> {study_content} </div> */}
           <input type="hidden" name="study_content" value={study_content} />
         </div>
