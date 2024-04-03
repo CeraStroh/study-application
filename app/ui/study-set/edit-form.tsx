@@ -2,23 +2,19 @@
 
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { StudySetForm, StudySetEditForm } from '@/app/lib/definitions';
+import { StudySetForm, Pair } from '@/app/lib/definitions';
 import { updateStudySet } from '@/app/lib/actions';
-import { useFormState } from 'react-dom';
 import { useState } from 'react';
-import { fetchTermsBySetId, fetchDefinitionsBySetId } from '@/app/lib/data';
 
-export default async function Form({
+export default function Form({
 	studyset,
 }: {
 	studyset: StudySetForm;
 }) {
-  // const [terms, definitions] = await Promise.all([
-  //   fetchTermsBySetId(studyset.set_id),
-  //   fetchDefinitionsBySetId(studyset.set_id),
-  // ]);
   const updateStudySetWithSetId = updateStudySet.bind(null, studyset.set_id);
-	const [pairs, setPairs] = useState<{ term: string; definition: string; }[]>([{ term: "", definition: "" }]);
+  
+  const [pairs, setPairs] = useState<Pair[]>(JSON.parse(studyset.study_content));
+  const study_content = JSON.stringify(pairs);
 
 	const handleAddPair = () => {
     setPairs([...pairs, { term: "", definition: "" }]);
@@ -71,52 +67,48 @@ export default async function Form({
         {/* Term-Definition pairs */}
         <div className="mb-1">
           {pairs.map((item, index) => (
-            // {studyset.terms?.map((term) => (
-            //   {studyset.definitions?.map((definition) => (
-                <div className="input_container" key={index}>
-                  <div className="w-full">
-                    <label htmlFor="term" className="mb-2 block text-sm font-medium text-black">
-                      Term
-                    </label>
-                    <input
-                      id="term"
-                      name="term"
-                      // type="string"
-                      value={studyset.terms}//{item.term}
-                      onChange={(event) => handleChange(event, index)}
-                      placeholder="Enter term"
-                      className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                      // aria-describedby="pairs-error"
-                    />
-                  </div>
-                  <div className="w-full">
-                    <label htmlFor="definition" className="mb-2 block text-sm font-medium text-black">
-                      Definition
-                    </label>
-                    <input
-                      id="definition"
-                      name="definition"
-                      // type="string"
-                      value={studyset.definitions}//{item.definition}
-                      onChange={(event) => handleChange(event, index)}
-                      placeholder="Enter definition"
-                      className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                      // aria-describedby="pairs-error"
-                    />
-                  </div>
-                  <div className="mb-5">
-                  {pairs.length > 1 && (
-                    <Button onClick={() => handleDeletePair(index)}>Delete</Button>
-                  )}
-                  </div>
-                  <div className="mb-5">
-                  {index === pairs.length - 1 && (
-                    <Button onClick={() => handleAddPair()}>Add</Button>
-                  )}
-                  </div>
-                </div>
-            //   ))}
-            // ))}
+            <div className="input_container" key={index}>
+              <div className="w-full">
+                <label htmlFor="term" className="mb-2 block text-sm font-medium text-black">
+                  Term
+                </label>
+                <input
+                  id="term"
+                  name="term"
+                  // type="string"
+                  value={item.term}
+                  onChange={(event) => handleChange(event, index)}
+                  placeholder="Enter term"
+                  className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
+                  // aria-describedby="pairs-error"
+                />
+              </div>
+              <div className="w-full">
+                <label htmlFor="definition" className="mb-2 block text-sm font-medium text-black">
+                  Definition
+                </label>
+                <input
+                  id="definition"
+                  name="definition"
+                  // type="string"
+                  value={item.definition}
+                  onChange={(event) => handleChange(event, index)}
+                  placeholder="Enter definition"
+                  className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
+                  // aria-describedby="pairs-error"
+                />
+              </div>
+              <div className="mb-5">
+              {pairs.length > 1 && (
+                <Button onClick={() => handleDeletePair(index)}>Delete</Button>
+              )}
+              </div>
+              <div className="mb-5">
+              {index === pairs.length - 1 && (
+                <Button onClick={() => handleAddPair()}>Add</Button>
+              )}
+              </div>
+            </div>
           ))}
           {/* <div id="pairs-error" aria-live="polite" aria-atomic="true">
             {state.errors?.jsonPairs &&
@@ -126,10 +118,11 @@ export default async function Form({
                 </p>
               ))}
           </div> */}
-          {/* <p>This is what the data looks like</p>
-          <div className="body"> {jsonPairs} </div> */}
-          {/* <p>Here are the terms for {studyset.title}</p>
-          <p>{terms}</p> */}
+          {/* <p>This is what the database content looks like</p> */}
+          {/* <div className="body"> {studyset.study_content} </div> */}
+          {/* <p>This is what the study_content variable looks like</p>
+          <div className="body"> {study_content} </div> */}
+          <input type="hidden" name="study_content" value={study_content} />
         </div>
       </div>
       <div className="mt-6 flex justify-end gap-4">
