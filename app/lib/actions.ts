@@ -6,7 +6,6 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
-const bcrypt = require('bcrypt');
 
 const FormSchema = z.object({
   user_id: z.string(),
@@ -18,14 +17,10 @@ const FormSchema = z.object({
   definitions: z.coerce.string(),
   study_content: z.coerce.string(),
   date: z.string(),
-  name: z.string(),
-  email: z.string(),
-  password: z.coerce.string(),
 });
 
 const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
 const UpdateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true});
-const CreateUser = FormSchema.omit({ user_id: true, set_id: true, title: true, terms: true, definitions: true, study_content: true, date: true });
 
 export type State = {
   errors?: {
@@ -33,9 +28,6 @@ export type State = {
     terms?: object[];
     definitions?: object[];
     study_content?: object[];
-    name?: string[];
-    email?: string[];
-    password?: object[];
   };
   message?: string | null;
 };
@@ -128,36 +120,6 @@ export async function authenticate(
     }
     throw error;
   }
-}
-
-export async function createUser(formData: FormData) {
-  const { name, email, password } = CreateUser.parse({
-    name: formData.get('name'),
-    email: formData.get('email'),
-    password: formData.get('password'),
-  });
-  
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  console.log(`name: ${name}`);
-  console.log(`email: ${email}`);
-  console.log(`hashedPassword: ${hashedPassword}`);
-
-  try {
-    await sql`
-      INSERT INTO users (name, email, password)
-      VALUES (${name}, ${email}, ${hashedPassword}])
-      ON CONFLICT (user_id) DO NOTHING;
-    `;
-    console.log(`Added ${name} to users table`);
-  } catch (error) {
-    return {
-      message: 'Database Error: Failed to add user.',
-    };
-  }
-
-  revalidatePath('/login');
-  redirect('/login');
 }
 
 export async function createTest(formData: FormData) {
