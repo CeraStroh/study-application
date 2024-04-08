@@ -4,8 +4,8 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-// import { signIn } from '@/auth';
-// import { AuthError } from 'next-auth';
+import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
 
 const FormSchema = z.object({
   user_id: z.string(),
@@ -79,7 +79,6 @@ export async function createStudySet(formData: FormData) {
   redirect('/home');
 }
 
-
 export async function updateStudySet(set_id: string, formData: FormData) {
   const { title, terms, definitions, study_content } = UpdateStudySet.parse({
     title: formData.get('title'),
@@ -102,6 +101,25 @@ export async function deleteStudySet(set_id: string) {
   await sql`DELETE FROM studysets WHERE set_id = ${set_id}`;
   console.log(`Deleted ${set_id} from studysets table`);
   revalidatePath('/home');
+}
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
+  }
 }
 
 export async function createTest(formData: FormData) {
