@@ -8,10 +8,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/app/ui/button';
-import Link from 'next/link';
 import { useFormState, useFormStatus } from 'react-dom';
 import { authenticate } from '@/app/lib/actions';
-// import { useSession, signIn, signOut } from 'next-auth/react';
  
 export default function LoginForm() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
@@ -76,8 +74,6 @@ export default function LoginForm() {
             </>
           )}
         </div>
-        <RegisterButton />
-        {/* <GitHubLoginButton /> */}
       </div>
     </form>
   );
@@ -92,24 +88,3 @@ function LoginButton() {
     </Button>
   );
 }
-
-function RegisterButton() {
-  return (
-    <Link
-      href="/login/register"
-      className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-    >
-      {/* <Button> */}
-        Register new user
-      {/* </Button> */}
-    </Link>
-  )
-}
-
-// function GitHubLoginButton() {
-//   return (
-//     <Button onClick={() => signIn("github")}>
-//       Sign in with GitHub
-//     </Button>
-//   )
-// }
