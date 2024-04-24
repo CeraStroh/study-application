@@ -29,7 +29,8 @@ export default function Form({
     setPairs(onChangeValue);
   };
 
-  const handleDeletePair = (index: number): void => {
+  const handleDeletePair = (index: number, event:  React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     const newArray = [...pairs];
     newArray.splice(index, 1);
     setPairs(newArray);
@@ -100,7 +101,7 @@ export default function Form({
               </div>
               <div className="mb-5">
               {pairs.length > 1 && (
-                <Button onClick={() => handleDeletePair(index)}>Delete</Button>
+                <Button onClick={(event) => handleDeletePair(index, event)}>Delete</Button>
               )}
               </div>
               <div className="mb-5">
