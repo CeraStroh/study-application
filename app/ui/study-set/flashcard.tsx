@@ -7,6 +7,7 @@ import { Pair, StudySetTable } from '@/app/lib/definitions';
 import { useState } from 'react';
 import { Button } from '@/app/ui/button';
 import Switch from '@mui/material/Switch';
+import { number } from 'zod';
 
 export default function Flashcard({
 	studyset,
@@ -31,12 +32,36 @@ export default function Flashcard({
 
 	const [pairs] = useState<Pair[]>(JSON.parse(studyset.study_content));
 	const [visible, setVisible] = useState(answerWithTerm);
+	const [scoreChoice, setScoreChoice] = useState(score);
+	const [shuffleChoice, setShuffleChoice] = useState(shuffle);
 	const [cardIndex, setCardIndex] = useState(0);
+	const indexArray = [];
+	const [correctScore, setCorrectScore] = useState(0);
+	const [totalScore] = useState(pairs.length);
 
 	const reset = () => {
 		setVisible(answerWithTerm);
+		setScoreChoice(score);
+		setShuffleChoice(shuffle);
+		fillIndexArray();
 		setCardIndex(0);
-	}
+		setCorrectScore(0);
+		
+	};
+
+	const fillIndexArray = () => {
+		for (var i = 0; i < pairs.length; i++) {
+			indexArray.push(i);
+		}
+		if (shuffleChoice) {
+			for (var i = pairs.length - 1; i > 0; i--) {
+				var j = Math.floor(Math.random() * (i + 1));
+				var temp = indexArray[i];
+				indexArray[i] = indexArray[j];
+				indexArray[j] = temp;
+			}
+		}
+	};
 
 	const handleVisible = () => {
 		if (visible !== false) setVisible(false);
@@ -44,16 +69,25 @@ export default function Flashcard({
 	};
 
 	const handleNextCard = () => {
-		if (cardIndex === pairs.length-1) setCardIndex(0);
-		else setCardIndex(cardIndex+1);
+		if (cardIndex === pairs.length-1) {
+			setCardIndex(0);
+			setCorrectScore(0);
+		} else {
+			setCardIndex(cardIndex+1);
+		}
 		setVisible(answerWithTerm);
-	}
+	};
 
 	const handlePreviousCard = () => {
 		if (cardIndex === 0) setCardIndex(pairs.length-1);
 		else setCardIndex(cardIndex-1);
 		setVisible(answerWithTerm);
-	}
+	};
+
+	const handleCorrect = () => {
+		if (correctScore !== totalScore) setCorrectScore(correctScore + 1);
+		handleNextCard();
+	};
 
 	return (
 		<>
@@ -93,13 +127,13 @@ export default function Flashcard({
 				Yes
 
 				<div className="gap-2">
-					<Button onClick={reset}>Start Over</Button>
+					<Button onClick={reset}>Save Changes</Button>
 				</div>
 			</div>
 
 			<div className="mt-4 rounded-xl bg-gray-400 p-2 shadow-sm">
 				{pairs.map((item, index) => (
-					<div className="w-full">
+					<div className="w-full" key={index}>
 						{index === cardIndex && (
 							<div>
 								<Card onClick={handleVisible}>
@@ -114,16 +148,30 @@ export default function Flashcard({
 										</div>
 									</CardContent>
 								</Card>
-								<div className="w-full mt-6 flex justify-center items-center">
+								<div className="w-full mt-6 flex justify-center items-center space-x-4">
+									{scoreChoice === true ? (
+										<Button onClick={handleNextCard} className="bg-red-700 hover:bg-red-400">Incorrect</Button>
+									) : null}
 									<Button onClick={handleVisible}>Flip flashcard</Button>
+									{scoreChoice === true ? (
+										<Button onClick={handleCorrect} className="bg-green-600 hover:bg-green-300">Correct</Button>
+									) : null}
 								</div>
-								<div className="w-full mt-6 flex justify-end">
-									{cardIndex === 0 ? (
-										<Button disabled={true} className="disabled:opacity-75">Previous</Button>
-									) : <Button onClick={handlePreviousCard}>Previous</Button>}
-									{cardIndex === pairs.length-1 ? (
-										<Button onClick={handleNextCard}>Practice again</Button>
-									) : <Button onClick={handleNextCard}>Next</Button>}
+								<div className="mt-6">
+									<div className="flex justify-end space-x-2">
+										{scoreChoice === true ? (
+											<h2>{correctScore} / {totalScore}</h2>
+										) :
+											<>
+												{cardIndex === 0 ? (
+													<Button disabled={true} className="disabled:opacity-75 hover:bg-blue-500">Previous</Button>
+												) : <Button onClick={handlePreviousCard}>Previous</Button>}
+												{cardIndex === pairs.length-1 ? (
+													<Button onClick={handleNextCard}>Practice again</Button>
+												) : <Button onClick={handleNextCard}>Next</Button>}
+											</>
+										}
+									</div>
 								</div>
 							</div>
 						)}
