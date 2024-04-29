@@ -41,8 +41,3 @@ export type Pair = {
 	term: string;
 	definition: string;
 }
-
-export type Flashcard = {
-	front: string;
-	back: string;
-}
