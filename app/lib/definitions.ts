@@ -31,6 +31,12 @@ export type StudySetsTable = {
 	date: string;
 }
 
+export type StudySetTable = {
+	term: string;
+	definition: string;
+	study_content: string;
+}
+
 export type Pair = {
 	term: string;
 	definition: string;
