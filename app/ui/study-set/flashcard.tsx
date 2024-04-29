@@ -1,13 +1,11 @@
 'use client';
 
-import { lusitana } from '@/app/ui/fonts';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { Pair, StudySetTable } from '@/app/lib/definitions';
 import { useState } from 'react';
 import { Button } from '@/app/ui/button';
 import Switch from '@mui/material/Switch';
-import { number } from 'zod';
 
 export default function Flashcard({
 	studyset,
@@ -30,38 +28,36 @@ export default function Flashcard({
 		setShuffle(event.target.checked);
 	};
 
-	const [pairs] = useState<Pair[]>(JSON.parse(studyset.study_content));
+	const [pairs, setPairs] = useState<Pair[]>(JSON.parse(studyset.study_content));
+	const [shuffledPairs, setShuffledPairs] = useState<Pair[]>(JSON.parse(studyset.study_content));
 	const [visible, setVisible] = useState(answerWithTerm);
 	const [scoreChoice, setScoreChoice] = useState(score);
 	const [shuffleChoice, setShuffleChoice] = useState(shuffle);
 	const [cardIndex, setCardIndex] = useState(0);
-	const indexArray = [];
 	const [correctScore, setCorrectScore] = useState(0);
+	const [disableCorrect, setDisableCorrect] = useState(false);
 	const [totalScore] = useState(pairs.length);
 
 	const reset = () => {
 		setVisible(answerWithTerm);
 		setScoreChoice(score);
 		setShuffleChoice(shuffle);
-		fillIndexArray();
+		if (shuffle === true) {
+			shufflePairs(pairs);
+		} else setPairs(JSON.parse(studyset.study_content));
 		setCardIndex(0);
 		setCorrectScore(0);
-		
+		setDisableCorrect(false);
 	};
 
-	const fillIndexArray = () => {
-		for (var i = 0; i < pairs.length; i++) {
-			indexArray.push(i);
+	const shufflePairs = (array: Pair[]) => {
+		const newArray = [...array];
+		for (let i = newArray.length-1; i>0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[newArray[i], newArray[j]] = [newArray[j], newArray[i]];
 		}
-		if (shuffleChoice) {
-			for (var i = pairs.length - 1; i > 0; i--) {
-				var j = Math.floor(Math.random() * (i + 1));
-				var temp = indexArray[i];
-				indexArray[i] = indexArray[j];
-				indexArray[j] = temp;
-			}
-		}
-	};
+		setPairs(newArray);
+	}
 
 	const handleVisible = () => {
 		if (visible !== false) setVisible(false);
@@ -69,14 +65,19 @@ export default function Flashcard({
 	};
 
 	const handleNextCard = () => {
+		if (cardIndex !== pairs.length-1) {
+			setCardIndex(cardIndex+1);
+			setVisible(answerWithTerm);
+		};
+	};
+
+	const handleStartOver = () => {
 		if (cardIndex === pairs.length-1) {
 			setCardIndex(0);
 			setCorrectScore(0);
-		} else {
-			setCardIndex(cardIndex+1);
-		}
-		setVisible(answerWithTerm);
-	};
+			setDisableCorrect(false);
+		};
+	}
 
 	const handlePreviousCard = () => {
 		if (cardIndex === 0) setCardIndex(pairs.length-1);
@@ -86,7 +87,8 @@ export default function Flashcard({
 
 	const handleCorrect = () => {
 		if (correctScore !== totalScore) setCorrectScore(correctScore + 1);
-		handleNextCard();
+		if (cardIndex !== pairs.length-1)	handleNextCard();
+		else setDisableCorrect(true);
 	};
 
 	return (
@@ -150,24 +152,31 @@ export default function Flashcard({
 								</Card>
 								<div className="w-full mt-6 flex justify-center items-center space-x-4">
 									{scoreChoice === true ? (
-										<Button onClick={handleNextCard} className="bg-red-700 hover:bg-red-400">Incorrect</Button>
+										<>
+											<Button onClick={handleNextCard} className="bg-red-700 hover:bg-red-400">Incorrect</Button>
+										</>
 									) : null}
 									<Button onClick={handleVisible}>Flip flashcard</Button>
 									{scoreChoice === true ? (
-										<Button onClick={handleCorrect} className="bg-green-600 hover:bg-green-300">Correct</Button>
+										<Button onClick={handleCorrect} disabled={disableCorrect} className="bg-green-600 hover:bg-green-300">Correct</Button>
 									) : null}
 								</div>
 								<div className="mt-6">
 									<div className="flex justify-end space-x-2">
 										{scoreChoice === true ? (
+											<>
 											<h2>{correctScore} / {totalScore}</h2>
+											{cardIndex === pairs.length-1 ? (
+												<Button onClick={handleStartOver}>Practice again</Button>
+											) : null}
+											</>
 										) :
 											<>
 												{cardIndex === 0 ? (
 													<Button disabled={true} className="disabled:opacity-75 hover:bg-blue-500">Previous</Button>
 												) : <Button onClick={handlePreviousCard}>Previous</Button>}
 												{cardIndex === pairs.length-1 ? (
-													<Button onClick={handleNextCard}>Practice again</Button>
+													<Button onClick={handleStartOver}>Practice again</Button>
 												) : <Button onClick={handleNextCard}>Next</Button>}
 											</>
 										}
