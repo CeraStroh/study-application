@@ -37,3 +37,14 @@ export function DeleteStudySet({ set_id }: { set_id: string }) {
     </form>
   )
 }
+
+export function FlashcardPractice({ set_id }: { set_id: string }) {
+  return (
+    <Link
+      href={`/home/study-set/${set_id}/flashcards`}
+      className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+    >
+      <span className="hidden md:block">Study with Flashcards</span>
+    </Link>
+  )
+}
