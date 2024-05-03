@@ -5,7 +5,7 @@ import {
 } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
-export async function fetchStudySets() {
+export async function fetchStudySets(user_id: string) {
 	noStore();
 	try {
 		const studysets = await sql<StudySetsTable>`
@@ -14,6 +14,7 @@ export async function fetchStudySets() {
 				studysets.title,
 				studysets.date
 			FROM studysets
+			WHERE studysets.user_id = ${user_id}
 			ORDER BY title ASC
 		`;
 
