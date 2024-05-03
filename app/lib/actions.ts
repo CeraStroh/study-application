@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signIn } from '@/auth';
+import { auth, signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 const bcrypt = require('bcrypt');
 
@@ -18,6 +18,10 @@ const FormSchema = z.object({
   definitions: z.coerce.string(),
   study_content: z.coerce.string(),
   date: z.string(),
+});
+
+const AuthSchema = z.object({
+  user_id: z.string(),
   name: z.string(),
   email: z.string(),
   password: z.coerce.string(),
@@ -25,9 +29,9 @@ const FormSchema = z.object({
   security_answer: z.string(),
 });
 
-const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true, name: true, email: true, password: true, security_question: true, security_answer: true });
-const UpdateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true, name: true, email: true, password: true, security_question: true, security_answer: true });
-const CreateUser = FormSchema.omit({ user_id: true, set_id: true, title: true, terms: true, definitions: true, study_content: true, date: true });
+const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
+const UpdateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
+const CreateUser = AuthSchema.omit({ user_id: true });
 
 export type State = {
   errors?: {
@@ -48,7 +52,8 @@ export async function createStudySet(formData: FormData) {
     definitions: formData.getAll('definition'),
     study_content: formData.get('study_content'),
   });
-  const user_id = '410544b2-4001-4271-9855-fec4b6a6442a';
+  const session = await auth();
+  const user_id = session?.user?.id;
   const date = new Date().toISOString().split('T')[0];
   // console.log(`after validatedFields`);
   // If form validation fails, return errors early. Otherwise, continue.
@@ -62,10 +67,6 @@ export async function createStudySet(formData: FormData) {
   // console.log(`before preparing data`);
   // Prepare data for insertion into the database
   // const { title, terms, definitions } = validatedFields.data;
-  console.log(`title: ${title}`);
-  console.log(`terms: ${terms}`);
-  console.log(`definitions: ${definitions}`);
-  console.log(`study_content: ${study_content}`);
   // Insert data into the database
   try {
     await sql`
