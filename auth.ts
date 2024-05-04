@@ -43,13 +43,13 @@ export const { auth, signIn, signOut } = NextAuth({
       if (user) {
         token.user_id = (user as User).user_id;
       }
-      console.log('token', token);
+      // console.log('token', token);
 
       return token;
     },
     session({ session, token }) {
       session.user.id = token.user_id as string;
-      console.log('session', session);
+      // console.log('session', session);
 
       return session;
     },
