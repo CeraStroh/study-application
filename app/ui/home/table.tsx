@@ -2,9 +2,13 @@ import { fetchStudySets } from "@/app/lib/data";
 import { formatDateToLocal } from "@/app/lib/utils";
 import { UpdateStudySet, DeleteStudySet } from "../study-set/buttons";
 import Link from "next/link";
+import { auth } from '@/auth';
 
 export default async function StudySetsTable() {
-	const studysets = await fetchStudySets();
+  const session = await auth();
+  const user_id: string = session?.user?.id!;
+	const studysets = await fetchStudySets(user_id);
+
 	return (
 		<div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">

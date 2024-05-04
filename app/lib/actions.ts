@@ -4,8 +4,9 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { signIn } from '@/auth';
+import { auth, signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+const bcrypt = require('bcrypt');
 
 const FormSchema = z.object({
   user_id: z.string(),
@@ -19,8 +20,18 @@ const FormSchema = z.object({
   date: z.string(),
 });
 
+const AuthSchema = z.object({
+  user_id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string().min(8),
+  security_question: z.string(),
+  security_answer: z.string(),
+});
+
 const CreateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
-const UpdateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true});
+const UpdateStudySet = FormSchema.omit({ user_id: true, set_id: true, date: true });
+const CreateUser = AuthSchema.omit({ user_id: true });
 
 export type State = {
   errors?: {
@@ -28,6 +39,17 @@ export type State = {
     terms?: object[];
     definitions?: object[];
     study_content?: object[];
+  };
+  message?: string | null;
+};
+
+export type AuthState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+    security_question?: string[];
+    security_answer?: string[];
   };
   message?: string | null;
 };
@@ -41,7 +63,8 @@ export async function createStudySet(formData: FormData) {
     definitions: formData.getAll('definition'),
     study_content: formData.get('study_content'),
   });
-  const user_id = '410544b2-4001-4271-9855-fec4b6a6442a';
+  const session = await auth();
+  const user_id = session?.user?.id;
   const date = new Date().toISOString().split('T')[0];
   // console.log(`after validatedFields`);
   // If form validation fails, return errors early. Otherwise, continue.
@@ -55,10 +78,6 @@ export async function createStudySet(formData: FormData) {
   // console.log(`before preparing data`);
   // Prepare data for insertion into the database
   // const { title, terms, definitions } = validatedFields.data;
-  console.log(`title: ${title}`);
-  console.log(`terms: ${terms}`);
-  console.log(`definitions: ${definitions}`);
-  console.log(`study_content: ${study_content}`);
   // Insert data into the database
   try {
     await sql`
@@ -120,6 +139,45 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+export async function createUser(prevState: AuthState, formData: FormData) {
+  // Validate form using Zod
+  const validatedFields = CreateUser.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
+    security_question: formData.get('security_question'),
+    security_answer: formData.get('security_answer'),
+  });
+  
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create User.',
+    };
+  }
+
+  const { name, email, password, security_question, security_answer } = validatedFields.data;
+  
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    await sql`
+      INSERT INTO users (name, email, password, security_question, security_answer)
+      VALUES (${name}, ${email}, ${hashedPassword}, ${security_question}, ${security_answer})
+      ON CONFLICT (user_id) DO NOTHING;
+    `;
+    console.log(`Added ${name} to users table`);
+  } catch (error) {
+    return {
+      message: 'Database Error: Failed to add user.',
+    };
+  }
+
+  revalidatePath('/login');
+  redirect('/login');
 }
 
 export async function createTest(formData: FormData) {
