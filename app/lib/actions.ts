@@ -23,8 +23,8 @@ const FormSchema = z.object({
 const AuthSchema = z.object({
   user_id: z.string(),
   name: z.string(),
-  email: z.string(),
-  password: z.coerce.string(),
+  email: z.string().email(),
+  password: z.string().min(8),
   security_question: z.string(),
   security_answer: z.string(),
 });
@@ -39,6 +39,17 @@ export type State = {
     terms?: object[];
     definitions?: object[];
     study_content?: object[];
+  };
+  message?: string | null;
+};
+
+export type AuthState = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+    security_question?: string[];
+    security_answer?: string[];
   };
   message?: string | null;
 };
@@ -130,8 +141,9 @@ export async function authenticate(
   }
 }
 
-export async function createUser(formData: FormData) {
-  const { name, email, password, security_question, security_answer } = CreateUser.parse({
+export async function createUser(prevState: AuthState, formData: FormData) {
+  // Validate form using Zod
+  const validatedFields = CreateUser.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
     password: formData.get('password'),
@@ -139,13 +151,17 @@ export async function createUser(formData: FormData) {
     security_answer: formData.get('security_answer'),
   });
   
-  const hashedPassword = await bcrypt.hash(password, 10);
+  // If form validation fails, return errors early. Otherwise, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create User.',
+    };
+  }
 
-  console.log(`name: ${name}`);
-  console.log(`email: ${email}`);
-  // console.log(`hashedPassword: ${hashedPassword}`);
-  console.log(`security_question: ${security_question}`);
-  console.log(`security_answer: ${security_answer}`);
+  const { name, email, password, security_question, security_answer } = validatedFields.data;
+  
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
     await sql`
