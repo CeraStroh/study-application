@@ -7,7 +7,6 @@ import { auth } from '@/auth';
 export default async function StudySetsTable() {
   const session = await auth();
   const user_id: string = session?.user?.id!;
-  console.log('user_id', user_id);
 	const studysets = await fetchStudySets(user_id);
 
 	return (
