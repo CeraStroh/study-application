@@ -22,7 +22,7 @@ export default function RegisterForm() {
 
   const handleChange = (event: SelectChangeEvent) => {
     setQuestion(event.target.value as string);
-    console.log('question: ', question);
+    // console.log('question: ', question);
   };
  
   return (
