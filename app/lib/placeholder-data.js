@@ -6,6 +6,8 @@ const users = [
 		name: 'User',
 		email: 'user@testmail.com',
 		password: 'testunodostres',
+		security_question: '',
+		security_answer: '',
 	},
 ];
   
@@ -16,6 +18,7 @@ const studysets = [
 		date: '2024-2-18',
 		terms: ['Springfield', 'Indianapolis', 'Des Moines', 'Topeka', 'Lansing', 'Saint Paul', 'Jefferson City', 'Lincoln', 'Bismarck', 'Columbus', 'Pierre', 'Madison'],
 		definitions: ['Illinois', 'Indiana', 'Iowa', 'Kansas', 'Michigan', 'Minnesota', 'Missouri', 'Nebraska', 'North Dakota', 'Ohio', 'South Dakota', 'Wisconsin'],
+		study_content: [],
 	},
 	{
 		user_id: users[0].user_id,
@@ -23,6 +26,7 @@ const studysets = [
 		date: '2024-2-17',
 		terms: ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'],
 		definitions: ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'],
+		study_content: [],
 	},
 	{
 		user_id: users[0].user_id,
@@ -30,6 +34,7 @@ const studysets = [
 		date: '2024-2-16',
 		terms: ['Accounting Equation', 'Assets', 'Liabilities', 'Stockholders\' Equity'],
 		definitions: ['Assets = Liabilities + Stockholders\' Equity', 'things company owns (land, cash, equipment, buildings, inventory, supplies, computers, trucks, office furniture)', 'amount business owes/debt (Note Payable-loan, Accounts payable)', 'owners\' claim to business'],
+		study_content: [],
 	},
 ];
 

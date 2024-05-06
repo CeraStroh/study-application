@@ -12,7 +12,6 @@ import { Button } from '@/app/ui/button';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useState } from 'react';
 import { createUser } from '@/app/lib/actions';
-// import { useSession, signIn, signOut } from 'next-auth/react';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -23,7 +22,7 @@ export default function RegisterForm() {
 
   const handleChange = (event: SelectChangeEvent) => {
     setQuestion(event.target.value as string);
-    console.log('question: ', question);
+    // console.log('question: ', question);
   };
  
   return (

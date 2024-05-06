@@ -42,7 +42,7 @@ export async function fetchStudySetBySetId(set_id: string) {
 		const studyset = data.rows.map((studyset) => ({
 			...studyset,
 		}));
-		console.log(studyset); // Study Set is an empty array[]
+		// console.log(studyset); // Study Set is an empty array[]
 		return studyset[0];
 	} catch (error) {
 		console.error('Database Error:', error);

@@ -2,9 +2,6 @@ const { db } = require('@vercel/postgres');
 const {
   studysets,
   users,
-  // MidwestUSCapitals,
-  // COSCClasses,
-  // FinancialAccountingExam1,
 } = require('../app/lib/placeholder-data.js');
 const bcrypt = require('bcrypt');
 
@@ -30,8 +27,8 @@ async function seedUsers(client) {
       users.map(async (user) => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-        INSERT INTO users (user_id, name, email, password)
-        VALUES (${user.user_id}, ${user.name}, ${user.email}, ${hashedPassword})
+        INSERT INTO users (user_id, name, email, password, security_question, security_answer)
+        VALUES (${user.user_id}, ${user.name}, ${user.email}, ${hashedPassword}, ${user.security_question}, ${user.security_answer})
         ON CONFLICT (user_id) DO NOTHING;
       `;
       }),
@@ -61,7 +58,8 @@ async function seedStudySets(client) {
       title VARCHAR(255) NOT NULL,
       date DATE NOT NULL,
       terms VARCHAR[] NOT NULL,
-      definitions VARCHAR[] NOT NULL
+      definitions VARCHAR[] NOT NULL,
+      study_content VARCHAR[] NOT NULL
     );
   `;
 
@@ -71,8 +69,8 @@ async function seedStudySets(client) {
     const insertedStudysets = await Promise.all(
       studysets.map(
         (studyset) => client.sql`
-        INSERT INTO studysets (user_id, title, date, terms, definitions)
-        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.date}, ${studyset.terms}, ${studyset.definitions})
+        INSERT INTO studysets (user_id, title, date, terms, definitions, study_content)
+        VALUES (${studyset.user_id}, ${studyset.title}, ${studyset.date}, ${studyset.terms}, ${studyset.definitions}, ${studyset.study_content})
         ON CONFLICT (set_id) DO NOTHING;
       `,
       ),
