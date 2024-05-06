@@ -22,10 +22,10 @@ export default function Form({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     let { name, value } = event.target;
-    console.log(event.target);
+    // console.log(event.target);
     let onChangeValue = [...pairs];
     (onChangeValue[index] as any)[name] = value;
-    console.log(name);
+    // console.log(name);
     setPairs(onChangeValue);
   };
 
