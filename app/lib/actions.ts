@@ -55,8 +55,6 @@ export type AuthState = {
 };
  
 export async function createStudySet(formData: FormData) {
-  console.log(`Running createStudySet()`);
-  //Validate form using Zod
   const { title, terms, definitions, study_content } = CreateStudySet.parse({
     title: formData.get('title'),
     terms: formData.getAll('term'),
@@ -66,19 +64,7 @@ export async function createStudySet(formData: FormData) {
   const session = await auth();
   const user_id = session?.user?.id;
   const date = new Date().toISOString().split('T')[0];
-  // console.log(`after validatedFields`);
-  // If form validation fails, return errors early. Otherwise, continue.
-  // if (!validatedFields.success) {
-  //   console.log(`in unusccessful validatedFields`);
-  //   return {
-  //     errors: validatedFields.error.flatten().fieldErrors,
-  //     message: 'Missing Fields. Failed to Create Study Set.',
-  //   };
-  // }
-  // console.log(`before preparing data`);
-  // Prepare data for insertion into the database
-  // const { title, terms, definitions } = validatedFields.data;
-  // Insert data into the database
+
   try {
     await sql`
       INSERT INTO studysets (user_id, title, date, terms, definitions, study_content)
@@ -178,18 +164,4 @@ export async function createUser(prevState: AuthState, formData: FormData) {
 
   revalidatePath('/login');
   redirect('/login');
-}
-
-export async function createTest(formData: FormData) {
-  const rawFormData = {
-    title: formData.get('title'),
-    terms: formData.getAll('term'),
-    definitions: formData.getAll('definition'),
-  };
-  // Test it out:
-  console.log(rawFormData);
-  // console.log(typeof rawFormData.title);
-  // console.log(typeof rawFormData.terms);
-  // console.log(typeof rawFormData.definitions);
-  redirect('/home');
 }
