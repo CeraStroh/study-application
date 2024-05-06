@@ -1,13 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  CheckIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  PlusCircleIcon,
-  UserCircleIcon,
-} from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createStudySet } from '@/app/lib/actions';
 import { useState } from 'react';
@@ -55,14 +48,6 @@ export default function Form() {
                 aria-describedby="title-error"
             />
           </div>
-          {/* <div id="title-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.title &&
-              state.errors.title.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div> */}
         </div>
 
         {/* Term-Definition pairs */}
@@ -81,7 +66,6 @@ export default function Form() {
                   onChange={(event) => handleChange(event, index)}
                   placeholder="Enter term"
                   className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                  // aria-describedby="pairs-error"
                 />
               </div>
               <div className="w-full">
@@ -96,7 +80,6 @@ export default function Form() {
                   onChange={(event) => handleChange(event, index)}
                   placeholder="Enter definition"
                   className="peer w-full block rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-black text-black"
-                  // aria-describedby="pairs-error"
                 />
               </div>
               <div className="mb-5">
@@ -111,16 +94,6 @@ export default function Form() {
               </div>
             </div>
           ))}
-          {/* <div id="pairs-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.jsonPairs &&
-              state.errors.jsonPairs.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div> */}
-          {/* <p>This is what the study_content variable looks like</p>
-          <div className="body"> {study_content} </div> */}
           <input type="hidden" name="study_content" value={study_content} />
         </div>
       </div>
