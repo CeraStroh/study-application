@@ -68,7 +68,7 @@ export default function Flashcard({
 		if (cardIndex !== pairs.length-1) {
 			setCardIndex(cardIndex+1);
 			setVisible(answerWithTerm);
-		};
+		} else setDisableCorrect(true);
 	};
 
 	const handleStartOver = () => {
